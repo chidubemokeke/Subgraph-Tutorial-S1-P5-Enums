@@ -19,5 +19,8 @@ export const CRYPTOCOVEN_ADDRESS = "0x5180db8F5c931aaE63c74266b211F580155ecac8";
 // Constant representing the address of the OpenSea contract.
 export const OPENSEA_ADDRESS = "0x7f268357A8c2552623316e2562D90e642bB538E5";
 
+// Constant representing the address of the OpenSea contract.
+export const SEAPORT_ADDRESS = "0x0000000000000068F116a894984e2DB1123eB395";
+
 // SeaDrop is a contract for conducting primary NFT drops on EVM-compatible blockchains. (Factor logic for airdrops)
 //export const SEADROP_ADDRESS = "0x00005EA00Ac477B1030CE78506496e8C2dE24bf5";
