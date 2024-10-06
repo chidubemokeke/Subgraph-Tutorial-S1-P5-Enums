@@ -1,3 +1,13 @@
+# Enum for Transaction Types
+# This defines an enumeration called TransactionType.
+# Enums are a way to define a set of named values.
+# In this case, the values are TRADE, MINT and TRANSFER which represent different types of transactions.
+enum TransactionType {
+  TRADE # Represents a sale transaction where an NFT is sold
+  MINT # Represents a mint transaction where a new NFT is created
+  Transfer # Represents when an NFT is transferred without being sold in a marketplace
+}
+
 # Define a Transfer entity representing the transfer of NFTs
 type Transfer @entity(immutable: true) {
   id: ID! # Unique identifier for the transfer event
@@ -18,4 +28,23 @@ type Account @entity {
   sentCount: Int! # Number of transfer events sent by the account
   receivedCount: Int! # Number of transfer events received by the account
   mintCount: Int # Number of tokens minted (if applicable)
+}
+
+type Transaction @entity {
+  id: ID! # Unique identifier for the transaction
+  # Trade/Mint/Transfer
+  transactionType: TransactionType!
+
+  # Aggregated data fields for the transaction
+
+  "Total amount sold across all transactions"
+  totalSalesVolume: BigInt!
+  "Average price of NFTs sold"
+  averageSalePrice: BigDecimal!
+  "Total number of NFT sales"
+  totalSalesCount: BigInt!
+  "Highest sale price of an NFT"
+  highestSalePrice: BigInt!
+  "Lowest sale price of an NFT"
+  lowestSalePrice: BigInt!
 }

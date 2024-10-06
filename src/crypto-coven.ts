@@ -1,43 +1,51 @@
-import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven"; // Import the Transfer event from the Uniswap contract ABI
-import { Transfer } from "../generated/schema"; // Import the Transfer entity from the generated schema
+// Import the Transfer event from the CryptoCoven contract ABI
+import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven";
+
+// Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
+import { Transfer } from "../generated/schema";
+import { ZERO_ADDRESS } from "./constants";
+
+// Import a helper function that ensures accounts are created or retrieved
 import { getOrCreateAccount } from "./helper";
 
+// The handleTransfer function is triggered whenever a Transfer event occurs on the blockchain
 export function handleTransfer(event: TransferEvent): void {
-  // Get or create accounts for the sender and receiver
-  let fromAccount = getOrCreateAccount(event.params.from);
-  let toAccount = getOrCreateAccount(event.params.to);
+  // Get or create accounts for the sender ('from') and receiver ('to') of the NFT transfer
+  let fromAccount = getOrCreateAccount(event.params.from); // Retrieves or creates the sender's account
+  let toAccount = getOrCreateAccount(event.params.to); // Retrieves or creates the receiver's account
 
-  // Update the sender's sent count and the receiver's received count
-  fromAccount.sentCount += 1;
-  toAccount.receivedCount += 1;
+  // Increment the sent count for the sender's account
+  fromAccount.sentCount += 1; // Tracks how many NFTs the sender has sent
 
-  // Update the receiver's received count and total received amount
-  toAccount.totalSpent = toAccount.totalSpent.plus(event.transaction.value);
+  // Increment the received count for the receiver's account
+  toAccount.receivedCount += 1; // Tracks how many NFTs the receiver has received
 
-  // Check if the transfer indicates a minting event
-  const mint = "0x0000000000000000000000000000000000000000";
+  // Update the total amount spent by the receiver, adding the value of the transferred NFT
+  toAccount.totalSpent = toAccount.totalSpent.plus(event.transaction.value); // Keeps track of total expenditure for the receiver
 
-  if (event.params.from.toHex() == mint) {
-    // This indicates a minting event
-    toAccount.mintCount += 1; // Increment the mintCount for the receiving account
+  // Check if the 'from' address of the transfer matches the zero address, indicating a minting event
+  if (event.params.from == ZERO_ADDRESS) {
+    // This indicates a minting event where the NFT is being created and sent directly to the receiver
+    toAccount.mintCount += 1; // Increment the mintCount for the receiving account, tracking how many NFTs they have minted
   }
 
-  // Save the updated accounts to the store
-  fromAccount.save();
-  toAccount.save();
+  // Save the updated sender and receiver accounts to the store to persist changes
+  fromAccount.save(); // Save the updated state of the sender's account
+  toAccount.save(); // Save the updated state of the receiver's account
 
-  // Create a new Transfer entity with a unique ID for each event
+  // Create a unique ID for the Transfer entity using the transaction hash and log index to avoid collisions
   let transfer = new Transfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString() // Unique ID format: transaction hash + log index
   );
 
-  // Set the properties of the Transfer entity
-  transfer.from = fromAccount.id;
-  transfer.to = toAccount.id;
-  transfer.tokenId = event.params.tokenId; // Ensure this is a single BigInt, not an array
-  transfer.value = event.transaction.value;
-  transfer.marketPlace = event.transaction.from;
-  transfer.txHash = event.transaction.hash;
+  // Set the properties of the Transfer entity with relevant data from the transfer event
+  transfer.from = fromAccount.id; // Store the ID of the sender account
+  transfer.to = toAccount.id; // Store the ID of the receiver account
+  transfer.tokenId = event.params.tokenId; // Set the unique token ID for the NFT being transferred
+  transfer.value = event.transaction.value; // Store the value associated with the transaction
+  transfer.marketPlace = event.transaction.from; // Record the marketplace address (who initiated the transfer)
+  transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
-  transfer.save(); // Save the Transfer entity to the store
+  // Save the Transfer entity to the store, persisting the transfer record
+  transfer.save(); // The Transfer entity is now stored in the database for querying later
 }
