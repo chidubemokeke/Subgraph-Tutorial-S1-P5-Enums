@@ -1,73 +1,21 @@
-import {
-  Approval as ApprovalEvent,
-  ApprovalForAll as ApprovalForAllEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
-  Transfer as TransferEvent
-} from "../generated/CryptoCoven/CryptoCoven"
-import {
-  Approval,
-  ApprovalForAll,
-  OwnershipTransferred,
-  Transfer
-} from "../generated/schema"
+import { BigInt, log } from "@graphprotocol/graph-ts";
+import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven"; // Import the Transfer event from the Uniswap contract ABI
+import { Transfer } from "../generated/schema"; // Import the Transfer entity from the generated schema
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
+// Function to handle transfer events
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  // Create a new Transfer entity with the unique ID
+  let transfer = new Transfer(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  );
+  // If the tokenId is a single value, wrap it in an array
+  let tokenIds: BigInt[] = [event.params.tokenId];
+  // Set the properties of the Transfer entity
+  transfer.from = event.params.from;
+  transfer.to = event.params.to;
+  transfer.tokenId = tokenIds;
+  transfer.value = event.transaction.value;
+  transfer.marketplace = event.transaction.from;
+  transfer.txHash = event.transaction.hash;
+  transfer.save(); // Save the Transfer entity to the store
 }
