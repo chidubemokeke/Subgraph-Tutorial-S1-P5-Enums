@@ -1,0 +1,28 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CryptoCoven
+    network: mainnet
+    source:
+      address: "0x5180db8F5c931aaE63c74266b211F580155ecac8"
+      abi: CryptoCoven
+      startBlock: 13547115
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Account
+        - Transfer
+      abis:
+        - name: CryptoCoven
+          file: ./abis/CryptoCoven.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+          receipt: true
+      file: ./src/crypto-coven.ts
