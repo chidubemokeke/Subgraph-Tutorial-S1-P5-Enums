@@ -3,7 +3,17 @@ import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven"
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
 import { Transfer } from "../generated/schema";
-import { ZERO_ADDRESS } from "./constants";
+import {
+  OPENSEA_ADDRESS,
+  RARIBLE_ADDRESS,
+  ZERO_ADDRESS,
+  SEAPORT_ADDRESS,
+  LOOKS_RARE_ADDRESS,
+  OXPROTOCOL_ADDRESS,
+  BIGINT_ONE,
+  BLUR_ADDRESS,
+  X2Y2_ADDRESS,
+} from "./constants";
 
 // Import a helper function that ensures accounts are created or retrieved
 import { getOrCreateAccount } from "./helper";
@@ -43,9 +53,22 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.to = toAccount.id; // Store the ID of the receiver account
   transfer.tokenId = event.params.tokenId; // Set the unique token ID for the NFT being transferred
   transfer.value = event.transaction.value; // Store the value associated with the transaction
-  transfer.marketPlace = event.transaction.from; // Record the marketplace address (who initiated the transfer)
+  // transfer.marketPlace = marketplace; // Record the marketplace contract (who initiated the transfer)
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
-  // Save the Transfer entity to the store, persisting the transfer record
-  transfer.save(); // The Transfer entity is now stored in the database for querying later
+  // Check the transaction's sender address to determine the marketplace
+  let marketplace = "";
+  let sender = event.transaction.from; // Get the transaction sender
+
+  if (sender == OPENSEA_ADDRESS) {
+    marketplace = "OpenSea";
+  } else if (sender == RARIBLE_ADDRESS) {
+    marketplace = "Rarible";
+  } else if (sender == SEAPORT_ADDRESS) {
+    marketplace = "Seaport";
+  }
+  {
+    // Save the Transfer entity to the store, persisting the transfer record
+    transfer.save(); // The Transfer entity is now stored in the database for querying later
+  }
 }
