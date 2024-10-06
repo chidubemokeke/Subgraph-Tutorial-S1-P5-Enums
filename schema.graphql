@@ -1,18 +1,38 @@
-type Transfer @entity(immutable: true) {
-  id: ID!
-  from: Account! # address
-  to: Account! # address
-  tokenId: [BigInt!]! # uint256
-  value: BigInt
-  marketplace: Bytes!
-  txHash: Bytes!
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
-# Define an Account type representing a user account
-type Account @entity {
-  id: ID! # Unique identifier for the account entity
-  sentTransfers: [Transfer!]! @derivedFrom(field: "from") # Array of transfers sent by the account # Use @derivedFrom to create a relationship from Transfer 'from' field
-  receivedTransfers: [Transfer!]! @derivedFrom(field: "to") # Array of transfers received by the account # Use @derivedFrom to create a relationship from Transfer 'to' field
-  sentCount: Int! # Number of transfers sent by the account
-  receivedCount: Int! # Number of transfers received by the account
+type ApprovalForAll @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
