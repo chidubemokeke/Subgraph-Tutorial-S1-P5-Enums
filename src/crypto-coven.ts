@@ -16,6 +16,7 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.tokenId = tokenIds;
   transfer.value = event.transaction.value;
   transfer.marketplace = event.transaction.from;
+  transfer.taker = event.transaction.to;
   transfer.txHash = event.transaction.hash;
   transfer.save(); // Save the Transfer entity to the store
 }

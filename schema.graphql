@@ -5,5 +5,6 @@ type Transfer @entity(immutable: true) {
   tokenId: [BigInt!]! # uint256
   value: BigInt
   marketplace: Bytes!
+  taker: Bytes
   txHash: Bytes!
 }
