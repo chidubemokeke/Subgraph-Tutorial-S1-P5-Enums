@@ -26,25 +26,3 @@ dataSources:
           handler: handleTransfer
           receipt: true
       file: ./src/crypto-coven.ts
-  - kind: ethereum
-    name: OpenseaV2
-    network: mainnet
-    source:
-      address: "0x7f268357A8c2552623316e2562D90e642bB538E5"
-      abi: OpenseaV2
-      startBlock: 13547115
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Account
-        - Transfer
-      abis:
-        - name: OpenseaV2
-          file: ./abis/OpenSeaV2.json
-      eventHandlers:
-        - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
-          handler: handleOrdersMatched
-          receipt: true
-      file: ./src/crypto-coven.ts

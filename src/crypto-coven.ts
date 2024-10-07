@@ -1,9 +1,9 @@
 // Import the Transfer event from the CryptoCoven contract ABI
 import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven";
-import { log } from "@graphprotocol/graph-ts";
+import { BigInt, log } from "@graphprotocol/graph-ts";
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
-import { Transfer } from "../generated/schema";
+import { Transfer, Sale } from "../generated/schema";
 import {
   ZERO_ADDRESS,
   OPENSEA,
@@ -13,10 +13,11 @@ import {
   OXProtocol,
   BLUR,
   X2Y2,
+  BIGINT_ONE,
 } from "./constants";
 
 // Import a helper function that ensures accounts are created or retrieved
-import { getMarketplaceName, getOrCreateAccount } from "./helper";
+import { getOrCreateAccount } from "./helper";
 
 export enum Marketplace {
   OpenSea,
@@ -36,18 +37,21 @@ export function handleTransfer(event: TransferEvent): void {
   let toAccount = getOrCreateAccount(event.params.to); // Retrieves or creates the receiver's account
 
   // Increment the sent count for the sender's account
-  fromAccount.sentCount += 1; // Tracks how many NFTs the sender has sent
+  fromAccount.sentCount.plus(BIGINT_ONE); // Tracks how many NFTs the sender has sent
 
   // Increment the received count for the receiver's account
-  toAccount.receivedCount += 1; // Tracks how many NFTs the receiver has received
+  toAccount.receivedCount.plus(BIGINT_ONE); // Tracks how many NFTs the receiver has received
 
   // Update the total amount spent by the receiver, adding the value of the transferred NFT
   toAccount.totalSpent = toAccount.totalSpent.plus(event.transaction.value); // Keeps track of total expenditure for the receiver
 
   // Check if the 'from' address of the transfer matches the zero address, indicating a minting event
-  if (event.params.from == ZERO_ADDRESS) {
+  if (
+    event.params.from == ZERO_ADDRESS ||
+    event.transaction.from == ZERO_ADDRESS
+  ) {
     // This indicates a minting event where the NFT is being created and sent directly to the receiver
-    toAccount.mintCount += 1; // Increment the mintCount for the receiving account, tracking how many NFTs they have minted
+    toAccount.mintCount?.plus(BIGINT_ONE); // Increment the mintCount for the receiving account, tracking how many NFTs they have minted
   }
 
   // Save the updated sender and receiver accounts to the store to persist changes
@@ -63,7 +67,7 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.from = fromAccount.id; // Store the ID of the sender account
   transfer.to = toAccount.id; // Store the ID of the receiver account
   transfer.tokenId = event.params.tokenId; // Set the unique token ID for the NFT being transferred
-  transfer.value = event.transaction.value; // Store the value associated with the transaction
+  // transfer.value = event.transaction.value; // Store the value associated with the transaction
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
   // Check the transaction's sender address to determine the marketplace
@@ -89,8 +93,7 @@ export function handleTransfer(event: TransferEvent): void {
     log.info("Transfer from unknown marketplace: {}", [sender.toHexString()]);
     marketplace = Marketplace.Unknown;
   }
-  transfer.marketplace = getMarketplaceName(marketplace); // Save the string representation of the marketplace
-  transfer.save();
+  // transfer.marketplace = getMarketplaceName(marketplace); // Save the string representation of the marketplace
   // Save the Transfer entity to the store
   transfer.save();
 }

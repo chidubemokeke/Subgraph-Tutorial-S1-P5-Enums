@@ -1,4 +1,4 @@
-# Enum for Marketplaces
+# Enum for Marketplaces that this nft was purchased at.
 # This defines an enumeration called Marketplace
 enum Marketplace {
   OpenSea # Represents when a CryptoCoven NFT is transferred from OpenSea marketplace
@@ -8,27 +8,80 @@ enum Marketplace {
   Blur # Represents when a CryptoCoven NFT is transferred from Blur marketplace
   Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
   X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
-  Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace
+  Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
 }
 
-# Define a Transfer entity representing the transfer of NFTs
-type Transfer @entity(immutable: true) {
-  id: ID! # Unique identifier for the transfer event
-  from: Account! # Reference to the Account entity sending the NFT
-  to: Account! # Reference to the Account entity receiving the NFT
-  tokenId: BigInt! # The unique token ID for the transferred NFT
-  value: BigInt! # Value associated with the transfer
-  marketplace: Marketplace! # The marketplace or contract address where the transfer took place
-  txHash: Bytes! # Transaction hash associated with the transfer
+"Define a Transfer entity representing the transfer of NFTs"
+type Transfer @entity {
+  "Unique identifier for the transfer event"
+  id: ID!
+  "Reference to the Account entity sending the NFT"
+  from: Account!
+  "Reference to the Account entity receiving the NFT"
+  to: Account!
+  "The unique token ID for the transferred NFT"
+  tokenId: BigInt!
+  "Transaction hash associated with the transfer"
+  txHash: Bytes!
 }
 
-# Define an Account entity representing a user account
+"Define an Account entity representing a user account"
 type Account @entity {
-  id: ID! # Unique identifier for the account, typically the address
-  sentTransfers: [Transfer!]! @derivedFrom(field: "from") # Array of transfers sent by the account
-  receivedTransfers: [Transfer!]! @derivedFrom(field: "to") # Array of transfers received by the account
-  totalSpent: BigInt! # Total value of tokens purchased by the account
-  sentCount: Int! # Number of transfer events sent by the account
-  receivedCount: Int! # Number of transfer events received by the account
-  mintCount: Int # Number of tokens minted (if applicable)
+  "Unique identifier for the account, typically the address"
+  id: ID!
+  "Array of transfers sent by the account"
+  sentTransfers: [Transfer!]! @derivedFrom(field: "from")
+  "Array of transfers received by the account"
+  receivedTransfers: [Transfer!]! @derivedFrom(field: "to")
+  "Total value of tokens purchased by the account"
+  totalSpent: BigInt!
+  "Number of transfer events sent by the account"
+  sendCount: BigInt!
+  "Number of transfer events received by the account"
+  receiveCount: BigInt!
+  "Number of tokens minted (if applicable)"
+  mintCount: BigInt
+}
+
+type Sale @entity {
+  "Unique identifier for the sale"
+  id: ID!
+
+  "TokenId associated with Sale"
+  referenceId: BigInt!
+
+  "Value associated with the sale"
+  value: BigInt
+
+  "The marketplace or contract address where the transfer took place"
+  marketplace: String
+
+  "Address of the buyer in the sale"
+  buyer: Bytes!
+
+  "Address of the seller in the sale"
+  seller: Bytes!
+
+  # Aggregated data fields for the transaction
+
+  "Total amount sold across all transactions"
+  totalSalesVolume: BigInt!
+  "Average price of NFTs sold"
+  averageSalePrice: BigDecimal!
+  "Total number of NFT sales"
+  totalSalesCount: BigInt!
+  "Highest sale price of an NFT"
+  highestSalePrice: BigInt!
+  "Lowest sale price of an NFT"
+  lowestSalePrice: BigInt!
+
+  # Transaction details to track changes
+  "Index of the log within the transaction for tracking"
+  logIndex: BigInt!
+  "Hash of the transaction"
+  txHash: Bytes!
+  "Block number when this transaction entity was last updated"
+  blockNumber: BigInt!
+  "Timestamp of the block when this transaction entity was last updated"
+  blockTimestamp: BigInt!
 }
