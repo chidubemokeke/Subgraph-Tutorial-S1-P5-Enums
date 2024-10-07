@@ -18,7 +18,7 @@ type Transfer @entity(immutable: true) {
   to: Account! # Reference to the Account entity receiving the NFT
   tokenId: BigInt! # The unique token ID for the transferred NFT
   value: BigInt! # Value associated with the transfer
-  marketPlace: Marketplace! # The marketplace or contract address where the transfer took place
+  marketplace: Marketplace! # The marketplace or contract address where the transfer took place
   txHash: Bytes! # Transaction hash associated with the transfer
 }
 
@@ -31,20 +31,4 @@ type Account @entity {
   sentCount: Int! # Number of transfer events sent by the account
   receivedCount: Int! # Number of transfer events received by the account
   mintCount: Int # Number of tokens minted (if applicable)
-}
-
-type Transaction @entity {
-  id: ID! # Unique identifier for the transaction
-  # Aggregated data fields for the transaction
-
-  "Total amount sold across all transactions"
-  totalSalesVolume: BigInt!
-  "Average price of NFTs sold"
-  averageSalePrice: BigDecimal!
-  "Total number of NFT sales"
-  totalSalesCount: BigInt!
-  "Highest sale price of an NFT"
-  highestSalePrice: BigInt!
-  "Lowest sale price of an NFT"
-  lowestSalePrice: BigInt!
 }

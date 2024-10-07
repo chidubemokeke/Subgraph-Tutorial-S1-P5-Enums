@@ -1,22 +1,33 @@
 // Import the Transfer event from the CryptoCoven contract ABI
 import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven";
+import { log } from "@graphprotocol/graph-ts";
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
 import { Transfer } from "../generated/schema";
 import {
-  OPENSEA_ADDRESS,
-  RARIBLE_ADDRESS,
   ZERO_ADDRESS,
-  SEAPORT_ADDRESS,
-  LOOKS_RARE_ADDRESS,
-  OXPROTOCOL_ADDRESS,
-  BIGINT_ONE,
-  BLUR_ADDRESS,
-  X2Y2_ADDRESS,
+  OPENSEA,
+  RARIBLE,
+  SEAPORT,
+  LOOKS_RARE,
+  OXProtocol,
+  BLUR,
+  X2Y2,
 } from "./constants";
 
 // Import a helper function that ensures accounts are created or retrieved
-import { getOrCreateAccount } from "./helper";
+import { getMarketplaceName, getOrCreateAccount } from "./helper";
+
+export enum Marketplace {
+  OpenSea,
+  SeaPort,
+  LooksRare,
+  OxProtocol,
+  Blur,
+  Rarible,
+  X2Y2,
+  Unknown,
+}
 
 // The handleTransfer function is triggered whenever a Transfer event occurs on the blockchain
 export function handleTransfer(event: TransferEvent): void {
@@ -53,22 +64,33 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.to = toAccount.id; // Store the ID of the receiver account
   transfer.tokenId = event.params.tokenId; // Set the unique token ID for the NFT being transferred
   transfer.value = event.transaction.value; // Store the value associated with the transaction
-  // transfer.marketPlace = marketplace; // Record the marketplace contract (who initiated the transfer)
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
   // Check the transaction's sender address to determine the marketplace
-  let marketplace = "";
+  let marketplace: Marketplace; // Declare the marketplace variable as the enum type
   let sender = event.transaction.from; // Get the transaction sender
 
-  if (sender == OPENSEA_ADDRESS) {
-    marketplace = "OpenSea";
-  } else if (sender == RARIBLE_ADDRESS) {
-    marketplace = "Rarible";
-  } else if (sender == SEAPORT_ADDRESS) {
-    marketplace = "Seaport";
+  if (sender == OPENSEA) {
+    marketplace = Marketplace.OpenSea;
+  } else if (sender == RARIBLE) {
+    marketplace = Marketplace.Rarible;
+  } else if (sender == SEAPORT) {
+    marketplace = Marketplace.SeaPort;
+  } else if (sender == LOOKS_RARE) {
+    marketplace = Marketplace.LooksRare;
+  } else if (sender == OXProtocol) {
+    marketplace = Marketplace.OxProtocol;
+  } else if (sender == BLUR) {
+    marketplace = Marketplace.Blur;
+  } else if (sender == X2Y2) {
+    marketplace = Marketplace.X2Y2;
+  } else {
+    // If it's an unknown marketplace, log it and ignore this transfer for sale tracking
+    log.info("Transfer from unknown marketplace: {}", [sender.toHexString()]);
+    marketplace = Marketplace.Unknown;
   }
-  {
-    // Save the Transfer entity to the store, persisting the transfer record
-    transfer.save(); // The Transfer entity is now stored in the database for querying later
-  }
+  transfer.marketplace = getMarketplaceName(marketplace); // Save the string representation of the marketplace
+  transfer.save();
+  // Save the Transfer entity to the store
+  transfer.save();
 }
