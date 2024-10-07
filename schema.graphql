@@ -1,7 +1,8 @@
 # Enum for Marketplaces that this nft was purchased at.
 # This defines an enumeration called Marketplace
 enum Marketplace {
-  OpenSea # Represents when a CryptoCoven NFT is transferred from OpenSea marketplace
+  OpenSeaV1
+  OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSea marketplace
   SeaPort # Represents when a CryptoCoven NFT is transferred from SeaPort marketplace
   LooksRare # Represents when a CryptoCoven NFT is transferred from LookRare marketplace
   OxProtocol # Represents when a CryptoCoven NFT is transferred from OxProtocol marketplace
@@ -9,9 +10,10 @@ enum Marketplace {
   Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
   X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
   Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
+  CryptoCoven
 }
 
-"Define a Transfer entity representing the transfer of NFTs"
+# Transfer entity representing the transfer of NFTs"
 type Transfer @entity {
   "Unique identifier for the transfer event"
   id: ID!
@@ -21,7 +23,12 @@ type Transfer @entity {
   to: Account!
   "The unique token ID for the transferred NFT"
   tokenId: BigInt!
-  "Transaction hash associated with the transfer"
+  "The marketplace or contract address where the transfer took place"
+  marketplace: Marketplace!
+  # Transaction details to track changes
+  "Index of the log within the transaction for tracking"
+  logIndex: BigInt!
+  "Hash of the transaction"
   txHash: Bytes!
 }
 
@@ -41,6 +48,7 @@ type Account @entity {
   receiveCount: BigInt!
   "Number of tokens minted (if applicable)"
   mintCount: BigInt
+  txHash: Bytes!
 }
 
 type Sale @entity {
@@ -80,8 +88,4 @@ type Sale @entity {
   logIndex: BigInt!
   "Hash of the transaction"
   txHash: Bytes!
-  "Block number when this transaction entity was last updated"
-  blockNumber: BigInt!
-  "Timestamp of the block when this transaction entity was last updated"
-  blockTimestamp: BigInt!
 }

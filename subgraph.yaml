@@ -18,6 +18,7 @@ dataSources:
       entities:
         - Account
         - Transfer
+        - Sale
       abis:
         - name: CryptoCoven
           file: ./abis/CryptoCoven.json
