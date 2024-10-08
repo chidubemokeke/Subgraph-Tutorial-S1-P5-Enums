@@ -3,7 +3,7 @@ import { Transfer as TransferEvent } from "../../generated/CryptoCoven/CryptoCov
 import { Address, log } from "@graphprotocol/graph-ts";
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
-import { Transfer, Sale } from "../../generated/schema";
+import { CovenTransfer } from "../../generated/schema";
 import {
   ZERO_ADDRESS,
   OPENSEAV1,
@@ -16,7 +16,7 @@ import {
   X2Y2,
   BIGINT_ONE,
   CRYPTO_COVEN,
-} from "./constants";
+} from "./Coven-Consts";
 
 // Import a helper function that ensures accounts are created or retrieved
 import { getOrCreateAccount, getMarketplaceName, Marketplace } from "./helper";
@@ -83,7 +83,7 @@ export function handleTransfer(event: TransferEvent): void {
   toAccount.save();
 
   // Create a unique ID for the Transfer entity using the transaction hash and log index to avoid collisions
-  let transfer = new Transfer(
+  let transfer = new CovenTransfer(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString() // Unique ID format: transaction hash + log index
   );
 
@@ -94,7 +94,7 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.logIndex = event.logIndex; // Store the value associated with the transaction
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
-  // Check for the Marketplace
+  // Check for the Marketplace + // Accessing the event.transaction parameters to compare contracts to determine marketPlace
   let sender: Address | null = event.transaction.to;
   let marketplace: Marketplace = Marketplace.Unknown; // Default value
 

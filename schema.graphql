@@ -14,7 +14,7 @@ enum Marketplace {
 }
 
 # Transfer entity representing the transfer of NFTs"
-type Transfer @entity {
+type CovenTransfer @entity {
   "Unique identifier for the transfer event"
   id: ID!
   "Reference to the Account entity sending the NFT"
@@ -37,9 +37,9 @@ type Account @entity {
   "Unique identifier for the account, typically the address"
   id: ID!
   "Array of transfers sent by the account"
-  sentTransfers: [Transfer!]! @derivedFrom(field: "from")
+  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "from")
   "Array of transfers received by the account"
-  receivedTransfers: [Transfer!]! @derivedFrom(field: "to")
+  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "to")
   "Total value of tokens purchased by the account"
   totalSpent: BigInt!
   "Number of transfer events sent by the account"

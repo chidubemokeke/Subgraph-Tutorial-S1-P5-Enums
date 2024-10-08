@@ -1,4 +1,4 @@
-import { Bytes, BigInt, Address } from "@graphprotocol/graph-ts";
+import { BigInt, Address } from "@graphprotocol/graph-ts";
 
 // Define a constant representing the value zero as a BigInt object.
 export const BIGINT_ZERO = BigInt.fromI32(0);
@@ -15,8 +15,8 @@ export const ZERO_ADDRESS: Address = Address.fromString(
 export const CRYPTOCOVEN_ADDRESS = "0x5180db8F5c931aaE63c74266b211F580155ecac8";
 
 export const CRYPTO_COVEN: Address = Address.fromString(CRYPTOCOVEN_ADDRESS);
-// List of Marketplaces the CrypToCoven NFT is listed/Traded
 
+// List of Marketplaces the CrypToCoven NFT is listed/Traded
 // Constant representing the address of the OpenSeaV2 contract.
 export const OPENSEAV1_ADDRESS = "0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b";
 
@@ -50,6 +50,3 @@ export const RARIBLE: Address = Address.fromString(RARIBLE_ADDRESS);
 // Constant representing the address of the X2Y2 contract.
 export const X2Y2_ADDRESS = "0x6D7812d41A08BC2a910B562d8B56411964A4eD88";
 export const X2Y2: Address = Address.fromString(X2Y2_ADDRESS);
-
-// SeaDrop is a contract for conducting primary NFT drops on EVM-compatible blockchains. (Factor logic for airdrops)
-//export const SEADROP_ADDRESS = "0x00005EA00Ac477B1030CE78506496e8C2dE24bf5";
