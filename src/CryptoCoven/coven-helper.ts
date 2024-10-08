@@ -1,20 +1,20 @@
 // Import the Account entity type from the generated schema
-import { Account } from "../../generated/schema";
+import { Account, Sale } from "../../generated/schema";
 // Import required types from the Graph Protocol library
 import { Bytes } from "@graphprotocol/graph-ts";
-import { BIGINT_ZERO } from "./Kitties-Consts";
+import { BIGINT_ZERO } from "../CryptoCoven/coven-consts";
 
 export enum Marketplace {
   OPENSEAV1,
-  SeaPort,
-  LooksRare,
+  OPENSEAV2,
+  SEAPORT,
+  LOOKS_RARE,
   OxProtocol,
-  Blur,
-  Rarible,
+  BLUR,
+  RARIBLE,
   X2Y2,
   Unknown,
-  CryptoCoven,
-  OPENSEAV2,
+  CRYPTO_COVEN,
 }
 
 // Function to get or create an Account entity based on an Ethereum address
@@ -51,20 +51,20 @@ export function getOrCreateAccount(address: Bytes): Account {
  * @returns A string representing the name of the marketplace.
  */
 export function getMarketplaceName(marketplace: Marketplace): string {
-  // Use if-else statements to map the enum value to a string
+  // Using if-else statements to map the enum value to a string
   if (marketplace === Marketplace.OPENSEAV1) {
     return "OpenSeaV1"; // If the marketplace is OpenSea, return its string representation
   } else if (marketplace === Marketplace.OPENSEAV2) {
     return "OpenSeaV2";
-  } else if (marketplace === Marketplace.Rarible) {
+  } else if (marketplace === Marketplace.RARIBLE) {
     return "Rarible"; // If the marketplace is Rarible, return its string representation
-  } else if (marketplace === Marketplace.SeaPort) {
+  } else if (marketplace === Marketplace.SEAPORT) {
     return "SeaPort"; // If the marketplace is SeaPort, return its string representation
-  } else if (marketplace === Marketplace.LooksRare) {
+  } else if (marketplace === Marketplace.LOOKS_RARE) {
     return "LooksRare"; // If the marketplace is LooksRare, return its string representation
   } else if (marketplace === Marketplace.OxProtocol) {
     return "OxProtocol"; // If the marketplace is OxProtocol, return its string representation
-  } else if (marketplace === Marketplace.Blur) {
+  } else if (marketplace === Marketplace.BLUR) {
     return "Blur"; // If the marketplace is Blur, return its string representation
   } else if (marketplace === Marketplace.X2Y2) {
     return "X2Y2"; // If the marketplace is X2Y2, return its string representation
@@ -72,24 +72,3 @@ export function getMarketplaceName(marketplace: Marketplace): string {
     return "Unknown"; // If the marketplace doesn't match any known values, return "Unknown"
   }
 }
-
-/**export function getOrCreateSale(id: string): Sale {
-  let trade = Sale.load(id);
-
-  if (!trade) {
-    trade = new Sale(id);
-    trade.referenceId = BIGINT_ZERO;
-    trade.value = BIGINT_ZERO;
-    trade.marketplace = "";
-    trade.buyer = Bytes.empty();
-    trade.seller = Bytes.empty();
-    trade.totalSalesCount = BIGINT_ZERO;
-    trade.totalSalesVolume = BIGINT_ZERO;
-    trade.averageSalePrice = BigDecimal.zero();
-    trade.highestSalePrice = BIGINT_ZERO;
-    trade.lowestSalePrice = BIGINT_ZERO;
-
-    trade.save();
-  }
-  return trade as Sale;
-}**/

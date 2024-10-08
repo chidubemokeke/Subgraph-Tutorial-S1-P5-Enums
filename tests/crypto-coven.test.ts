@@ -9,7 +9,7 @@ import {
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { Approval } from "../generated/schema";
 import { Approval as ApprovalEvent } from "../generated/CryptoCoven/CryptoCoven";
-import { handleApproval } from "../src/CryptoCoven/crypto-coven";
+import { handleApproval } from "../src/CryptoCoven/coven";
 import { createApprovalEvent } from "./crypto-coven-utils";
 
 // Tests structure (matchstick-as >=0.5.0)

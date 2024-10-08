@@ -1,6 +1,6 @@
 "Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)."
 enum Marketplace {
-  OpenSeaV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
+  OPENSEAV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
   OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSeaV2 marketplace
   SeaPort # Represents when a CryptoCoven NFT is transferred from SeaPort marketplace
   LooksRare # Represents when a CryptoCoven NFT is transferred from LookRare marketplace
@@ -9,21 +9,20 @@ enum Marketplace {
   Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
   X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
   Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
-  CryptoCoven # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
+  CRYPTO_COVEN # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
 }
 
 "Enum types that indicate what NFT the Account holds/interacted with"
 enum NFT {
-  CryptoCoven # Represents a CryptoCoven NFT
-  CryptoKitties # Represents a CryptoKitties NFT
-  LEGEND # Represents an account with a CryptoKitties and CryptoCoven NFT
+  CRYPTO_COVEN # Represents a CryptoCoven NFT
+  CRYPTO_KITTIES # Represents a CryptoKitties NFT
 }
 
 # Enum for Transaction Types, either TRADE, Mint or Transfer for the CryptoKitty event.
 enum TransactionType {
   TRADE # Represents a sale transaction where an NFT is sold
   MINT # Represents a mint transaction where a new NFT is created
-  Transfer # Represents when an NFT is transferred without being sold on OpenSea
+  TRANSFER # Represents when an NFT is transferred without being sold on OpenSea
 }
 
 "Define an Account entity representing a user account"
@@ -91,11 +90,13 @@ type Sale @entity {
   "Unique identifier for the sale"
   id: ID!
 
-  "Reference to the Account entity to aggregate transaction details"
+  "Reference to the Account entity to aggregate transaction activity"
   account: Account!
 
   "TokenId associated with Sale"
   referenceId: BigInt!
+
+  nftSold: String!
 
   "Value associated with the sale"
   value: BigInt
@@ -106,7 +107,7 @@ type Sale @entity {
   "Address of the seller in the sale"
   seller: Bytes!
 
-  "Transaction Type if not Sale"
+  "Determine Transaction Type with Enum"
   transactionType: TransactionType!
   # Aggregated data fields for the transaction
 

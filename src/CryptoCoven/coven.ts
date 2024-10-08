@@ -1,5 +1,5 @@
 // Import the Transfer event from the CryptoCoven contract ABI
-import { Transfer as TransferEvent } from "../../generated/CryptoCoven/CryptoCoven";
+import { Transfer as CovenTransferEvent } from "../../generated/CryptoCoven/CryptoCoven";
 import { Address, log } from "@graphprotocol/graph-ts";
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
@@ -16,12 +16,16 @@ import {
   X2Y2,
   BIGINT_ONE,
   CRYPTO_COVEN,
-} from "./Coven-Consts";
+} from "./coven-consts";
 
-// Import a helper function that ensures accounts are created or retrieved
-import { getOrCreateAccount, getMarketplaceName, Marketplace } from "./helper";
+// Import helper functions that ensures accounts are created or retrieved
+import {
+  getOrCreateAccount,
+  getMarketplaceName,
+  Marketplace,
+} from "./coven-helper";
 
-export function handleTransfer(event: TransferEvent): void {
+export function handleTransfer(event: CovenTransferEvent): void {
   // Get or create an account entity for the sender ('from') address.
   // If the sender's account doesn't exist yet, 'getOrCreateAccount' will create it.
   let fromAccount = getOrCreateAccount(event.params.from);
@@ -99,14 +103,14 @@ export function handleTransfer(event: TransferEvent): void {
   let marketplace: Marketplace = Marketplace.Unknown; // Default value
 
   if (sender) {
-    if (sender.equals(CRYPTO_COVEN)) marketplace = Marketplace.CryptoCoven;
+    if (sender.equals(CRYPTO_COVEN)) marketplace = Marketplace.CRYPTO_COVEN;
     else if (sender.equals(OPENSEAV1)) marketplace = Marketplace.OPENSEAV1;
     else if (sender.equals(OPENSEAV2)) marketplace = Marketplace.OPENSEAV2;
-    else if (sender.equals(RARIBLE)) marketplace = Marketplace.Rarible;
-    else if (sender.equals(SEAPORT)) marketplace = Marketplace.SeaPort;
-    else if (sender.equals(LOOKS_RARE)) marketplace = Marketplace.LooksRare;
+    else if (sender.equals(RARIBLE)) marketplace = Marketplace.RARIBLE;
+    else if (sender.equals(SEAPORT)) marketplace = Marketplace.SEAPORT;
+    else if (sender.equals(LOOKS_RARE)) marketplace = Marketplace.LOOKS_RARE;
     else if (sender.equals(OXProtocol)) marketplace = Marketplace.OxProtocol;
-    else if (sender.equals(BLUR)) marketplace = Marketplace.Blur;
+    else if (sender.equals(BLUR)) marketplace = Marketplace.BLUR;
     else if (sender.equals(X2Y2)) marketplace = Marketplace.X2Y2;
     else
       log.info("Transfer from unknown marketplace: {}", [

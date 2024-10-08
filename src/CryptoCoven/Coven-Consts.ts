@@ -17,7 +17,7 @@ export const CRYPTOCOVEN_ADDRESS = "0x5180db8F5c931aaE63c74266b211F580155ecac8";
 export const CRYPTO_COVEN: Address = Address.fromString(CRYPTOCOVEN_ADDRESS);
 
 // List of Marketplaces the CrypToCoven NFT is listed/Traded
-// Constant representing the address of the OpenSeaV2 contract.
+// Constant representing the address of the OpenSeaV1 contract.
 export const OPENSEAV1_ADDRESS = "0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b";
 
 // Convert the string address to the Address type.

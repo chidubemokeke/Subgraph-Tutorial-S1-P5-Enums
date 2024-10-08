@@ -25,7 +25,7 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
           receipt: true
-      file: ./src/CryptoCoven/crypto-coven.ts
+      file: ./src/CryptoCoven/coven.ts
   - kind: ethereum
     name: CryptoKitties
     network: mainnet
@@ -48,4 +48,4 @@ dataSources:
         - event: Transfer(address,address,uint256)
           handler: handleTransfer
           receipt: true
-      file: ./src/CryptoKitties/crypto-kitties.ts
+      file: ./src/CryptoKitties/kitties.ts
