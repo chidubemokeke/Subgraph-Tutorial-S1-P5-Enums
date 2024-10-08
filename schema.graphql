@@ -1,8 +1,8 @@
 # Enum for Marketplaces that this nft was purchased at.
 # This defines an enumeration called Marketplace
 enum Marketplace {
-  OpenSeaV1
-  OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSea marketplace
+  OpenSeaV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
+  OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSeaV2 marketplace
   SeaPort # Represents when a CryptoCoven NFT is transferred from SeaPort marketplace
   LooksRare # Represents when a CryptoCoven NFT is transferred from LookRare marketplace
   OxProtocol # Represents when a CryptoCoven NFT is transferred from OxProtocol marketplace

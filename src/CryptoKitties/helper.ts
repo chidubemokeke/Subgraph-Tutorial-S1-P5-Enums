@@ -1,7 +1,7 @@
 // Import the Account entity type from the generated schema
-import { Account, Sale } from "../../generated/schema";
+import { Account } from "../../generated/schema";
 // Import required types from the Graph Protocol library
-import { BigDecimal, Bytes } from "@graphprotocol/graph-ts";
+import { Bytes } from "@graphprotocol/graph-ts";
 import { BIGINT_ZERO } from "./Kitties-Consts";
 
 export enum Marketplace {
