@@ -19,13 +19,6 @@ enum NFT {
   Unknown
 }
 
-# Enum for Transaction Types, either TRADE, Mint or Transfer for the CryptoKitty event.
-enum TransactionType {
-  TRADE # Represents a sale transaction where an NFT is sold
-  MINT # Represents a mint transaction where a new NFT is created
-  TRANSFER # Represents when an NFT is transferred without being sold on OpenSea
-}
-
 "Define an Account entity representing a user account"
 type Account @entity {
   "Unique identifier for the account, typically the address"
@@ -41,13 +34,19 @@ type Account @entity {
   "Array of CryptoKitties transfers received by the account"
   receivedKTransfers: [KittyTransfer!]! @derivedFrom(field: "toK")
   "Total value of tokens purchased by the account"
-  totalSpent: BigInt!
+  totalSpent: BigInt
   "Number of transfer events sent by the account"
-  sendCount: BigInt!
+  covenSendCount: BigInt
+  kittySendCount: BigInt
   "Number of transfer events received by the account"
-  receiveCount: BigInt!
+  covenReceiveCount: BigInt
+  KittyReceiveCount: BigInt
   "Number of tokens minted (if applicable)"
-  mintCount: BigInt
+  covenMintCount: BigInt
+  kittyMintCount: BigInt
+  "Index of the log within the transaction for tracking"
+  logIndex: BigInt!
+  "Hash of the transaction"
   txHash: Bytes!
 }
 
@@ -61,7 +60,7 @@ type CovenTransfer @entity {
   toC: Account!
   "The unique token ID for the CryptoCoven NFT"
   tokenId: BigInt!
-  "The marketplace or contract address where the transfer took place"
+  "The marketplace the nft contract interacted with, likely a trade"
   marketplace: Marketplace!
 
   "Index of the log within the transaction for tracking"
@@ -108,8 +107,6 @@ type Sale @entity {
   "Address of the seller in the sale"
   seller: Bytes!
 
-  "Determine Transaction Type with Enum"
-  transactionType: TransactionType!
   # Aggregated data fields for the transaction
 
   "Total amount sold across all transactions"

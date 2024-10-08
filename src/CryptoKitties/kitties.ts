@@ -10,3 +10,5 @@ import {
   BIGINT_ONE,
   CRYPTO_KITTIES,
 } from "../CryptoKitties/kitties-consts";
+
+export function handleTransfer(event: KittyTransferEvent): void {}
