@@ -16,6 +16,7 @@ enum Marketplace {
 enum NFT {
   CRYPTO_COVEN # Represents a CryptoCoven NFT
   CRYPTO_KITTIES # Represents a CryptoKitties NFT
+  Unknown
 }
 
 # Enum for Transaction Types, either TRADE, Mint or Transfer for the CryptoKitty event.

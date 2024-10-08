@@ -23,7 +23,9 @@ import {
   getOrCreateAccount,
   getMarketplaceName,
   Marketplace,
+  NFT,
 } from "./coven-helper";
+import { CRYPTO_KITTIES } from "../CryptoKitties/kitties-consts";
 
 export function handleTransfer(event: CovenTransferEvent): void {
   // Get or create an account entity for the sender ('from') address.
@@ -98,6 +100,37 @@ export function handleTransfer(event: CovenTransferEvent): void {
   transfer.logIndex = event.logIndex; // Store the value associated with the transaction
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer
 
+  // Initialize the nftType by checking the 'to' address of the transaction
+  let transactionTo: Address | null = event.transaction.to;
+
+  let nft: NFT = NFT.Unknown; // Default to Unknown in case no match is found
+
+  // Check if the 'to' address matches any known NFT contract addresses
+  if (transactionTo) {
+    if (transactionTo.equals(CRYPTO_COVEN)) {
+      nft = NFT.CRYPTO_COVEN;
+    } else if (transactionTo.equals(CRYPTO_KITTIES)) {
+      nft = NFT.CRYPTO_KITTIES;
+    }
+  }
+
+  // If the 'to' address didn't match, check the 'from' address of the transaction
+  let transactionFrom: Address | null = event.transaction.from;
+  if (transactionFrom) {
+    if (transactionFrom.equals(CRYPTO_COVEN)) {
+      nft = NFT.CRYPTO_COVEN;
+    } else if (transactionFrom.equals(CRYPTO_KITTIES)) {
+      nft = NFT.CRYPTO_KITTIES;
+    }
+  }
+
+  // Log information if no matching NFT contract was found
+  if (nft == NFT.Unknown) {
+    log.info("NFT type could not be determined for transaction: {}", [
+      event.transaction.hash.toHexString(),
+    ]);
+  }
+
   // Check for the Marketplace + // Accessing the event.transaction parameters to compare contracts to determine marketPlace
   let sender: Address | null = event.transaction.to;
   let marketplace: Marketplace = Marketplace.Unknown; // Default value
@@ -123,50 +156,3 @@ export function handleTransfer(event: CovenTransferEvent): void {
   transfer.marketplace = getMarketplaceName(marketplace);
   transfer.save();
 }
-/**Check the transaction's sender address to determine the marketplace
-  let marketplace: Marketplace; // Declare the marketplace variable as the enum type
-
-  // Get the transaction's 'to' address (can be null)
-  let sender: Address | null = event.transaction.to; // Explicitly declare sender type
-
-  // Check if the sender is null before proceeding with the if-else statements
-  if (sender == null) {
-    // If the sender is null, log this as an unknown sender
-    log.info("Transfer from unknown sender: {}", ["null"]);
-    marketplace = Marketplace.Unknown; // Assign marketplace as Unknown
-  } else {
-    // Check the sender's address and determine the marketplace based on known addresses
-    if (sender.equals(OPENSEA)) {
-      // If the sender matches the OpenSea address, set the marketplace accordingly
-      marketplace = Marketplace.OpenSea;
-    } else if (sender.equals(RARIBLE)) {
-      // If the sender matches the Rarible address, set the marketplace accordingly
-      marketplace = Marketplace.Rarible;
-    } else if (sender.equals(SEAPORT)) {
-      // If the sender matches the SeaPort address, set the marketplace accordingly
-      marketplace = Marketplace.SeaPort;
-    } else if (sender.equals(LOOKS_RARE)) {
-      // If the sender matches the LooksRare address, set the marketplace accordingly
-      marketplace = Marketplace.LooksRare;
-    } else if (sender.equals(OXProtocol)) {
-      // If the sender matches the OxProtocol address, set the marketplace accordingly
-      marketplace = Marketplace.OxProtocol;
-    } else if (sender.equals(BLUR)) {
-      // If the sender matches the Blur address, set the marketplace accordingly
-      marketplace = Marketplace.Blur;
-    } else if (sender.equals(X2Y2)) {
-      // If the sender matches the X2Y2 address, set the marketplace accordingly
-      marketplace = Marketplace.X2Y2;
-    } else {
-      // If the sender doesn't match any known addresses, log it as an unknown marketplace
-      log.info("Transfer from unknown marketplace: {}", [sender.toHexString()]);
-      marketplace = Marketplace.Unknown; // Assign marketplace as Unknown
-    }
-  }
-
-  // Optionally save the string representation of the marketplace
-  transfer.marketplace = getMarketplaceName(marketplace); // Store the marketplace name as a string
-
-  // Save the Transfer entity to the store
-  transfer.save(); // Persist the updated transfer information
-}**/

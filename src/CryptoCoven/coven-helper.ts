@@ -17,6 +17,12 @@ export enum Marketplace {
   CRYPTO_COVEN,
 }
 
+export enum NFT {
+  CRYPTO_COVEN,
+  CRYPTO_KITTIES,
+  Unknown,
+}
+
 // Function to get or create an Account entity based on an Ethereum address
 export function getOrCreateAccount(address: Bytes): Account {
   // Convert the provided Ethereum address to a hexadecimal string for use as the unique ID for the Account entity

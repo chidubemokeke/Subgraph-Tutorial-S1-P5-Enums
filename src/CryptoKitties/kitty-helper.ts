@@ -5,6 +5,7 @@ import { BIGINT_ZERO, CRYPTO_COVEN } from "../CryptoKitties/kitties-consts";
 export enum NFT {
   CRYPTO_COVEN,
   CRYPTO_KITTIES,
+  Unknown,
 }
 
 /**
