@@ -88,8 +88,8 @@ export function handleTransfer(event: TransferEvent): void {
   );
 
   // Set the properties of the Transfer entity with relevant data from the transfer event
-  transfer.from = fromAccount.id; // Store the ID of the sender account
-  transfer.to = toAccount.id; // Store the ID of the receiver account
+  transfer.fromC = fromAccount.id; // Store the ID of the sender account
+  transfer.toC = toAccount.id; // Store the ID of the receiver account
   transfer.tokenId = event.params.tokenId; // Set the unique token ID for the NFT being transferred
   transfer.logIndex = event.logIndex; // Store the value associated with the transaction
   transfer.txHash = event.transaction.hash; // Save the transaction hash for referencing this transfer

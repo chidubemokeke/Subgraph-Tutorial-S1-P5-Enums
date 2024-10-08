@@ -1,5 +1,4 @@
-# Enum for Marketplaces that this nft was purchased at.
-# This defines an enumeration called Marketplace
+"Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)."
 enum Marketplace {
   OpenSeaV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
   OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSeaV2 marketplace
@@ -10,36 +9,37 @@ enum Marketplace {
   Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
   X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
   Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
-  CryptoCoven
+  CryptoCoven # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
 }
 
-# Transfer entity representing the transfer of NFTs"
-type CovenTransfer @entity {
-  "Unique identifier for the transfer event"
-  id: ID!
-  "Reference to the Account entity sending the NFT"
-  from: Account!
-  "Reference to the Account entity receiving the NFT"
-  to: Account!
-  "The unique token ID for the transferred NFT"
-  tokenId: BigInt!
-  "The marketplace or contract address where the transfer took place"
-  marketplace: Marketplace!
-  # Transaction details to track changes
-  "Index of the log within the transaction for tracking"
-  logIndex: BigInt!
-  "Hash of the transaction"
-  txHash: Bytes!
+"Enum types that indicate what NFT the Account holds/interacted with"
+enum NFT {
+  CryptoCoven # Represents a CryptoCoven NFT
+  CryptoKitties # Represents a CryptoKitties NFT
+  LEGEND # Represents an account with a CryptoKitties and CryptoCoven NFT
+}
+
+# Enum for Transaction Types, either TRADE, Mint or Transfer for the CryptoKitty event.
+enum TransactionType {
+  TRADE # Represents a sale transaction where an NFT is sold
+  MINT # Represents a mint transaction where a new NFT is created
+  Transfer # Represents when an NFT is transferred without being sold on OpenSea
 }
 
 "Define an Account entity representing a user account"
 type Account @entity {
   "Unique identifier for the account, typically the address"
   id: ID!
-  "Array of transfers sent by the account"
-  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "from")
-  "Array of transfers received by the account"
-  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "to")
+  "The NFT contract where the transfer took place"
+  nft: NFT!
+  "Array of CryptoCoven transfers sent by the account"
+  sentCTransfers: [CovenTransfer!]! @derivedFrom(field: "fromC")
+  "Array of CryptoCoven transfers received by the account"
+  receivedCTransfers: [CovenTransfer!]! @derivedFrom(field: "toC")
+  "Array of CryptoKitties transfers sent by the account"
+  sentKTransfers: [KittyTransfer!]! @derivedFrom(field: "fromK")
+  "Array of CryptoKitties transfers received by the account"
+  receivedKTransfers: [KittyTransfer!]! @derivedFrom(field: "toK")
   "Total value of tokens purchased by the account"
   totalSpent: BigInt!
   "Number of transfer events sent by the account"
@@ -51,9 +51,48 @@ type Account @entity {
   txHash: Bytes!
 }
 
+# Transfer entity representing the transfer of the CryptoCoven NFT"
+type CovenTransfer @entity {
+  "Unique identifier for the transfer event"
+  id: ID!
+  "Reference to the Account entity sending the NFT"
+  fromC: Account!
+  "Reference to the Account entity receiving the NFT"
+  toC: Account!
+  "The unique token ID for the CryptoCoven NFT"
+  tokenId: BigInt!
+  "The marketplace or contract address where the transfer took place"
+  marketplace: Marketplace!
+
+  "Index of the log within the transaction for tracking"
+  logIndex: BigInt!
+  "Hash of the transaction"
+  txHash: Bytes!
+}
+
+# Transfer entity representing the transfer of the CryptoKitties NFT"
+type KittyTransfer @entity {
+  "Unique identifier for the transfer event"
+  id: ID!
+  "Reference to the Account entity sending the NFT"
+  fromK: Account!
+  "Reference to the Account entity receiving the NFT"
+  toK: Account!
+  "The unique token ID for the CryptoKitty NFT"
+  tokenId: BigInt!
+  "Index of the log within the transaction for tracking"
+  logIndex: BigInt!
+  "Hash of the transaction"
+  txHash: Bytes!
+}
+
+# Sale entity representing the Sale of the CryptoKitties NFT using TransactionReceipts to fetch addtional data from the logs"
 type Sale @entity {
   "Unique identifier for the sale"
   id: ID!
+
+  "Reference to the Account entity to aggregate transaction details"
+  account: Account!
 
   "TokenId associated with Sale"
   referenceId: BigInt!
@@ -61,15 +100,14 @@ type Sale @entity {
   "Value associated with the sale"
   value: BigInt
 
-  "The marketplace or contract address where the transfer took place"
-  marketplace: String
-
   "Address of the buyer in the sale"
   buyer: Bytes!
 
   "Address of the seller in the sale"
   seller: Bytes!
 
+  "Transaction Type if not Sale"
+  transactionType: TransactionType!
   # Aggregated data fields for the transaction
 
   "Total amount sold across all transactions"
@@ -83,7 +121,6 @@ type Sale @entity {
   "Lowest sale price of an NFT"
   lowestSalePrice: BigInt!
 
-  # Transaction details to track changes
   "Index of the log within the transaction for tracking"
   logIndex: BigInt!
   "Hash of the transaction"

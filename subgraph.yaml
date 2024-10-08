@@ -17,14 +17,14 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Account
-        - Transfer
-        - Sale
+        - CovenTransfer
       abis:
         - name: CryptoCoven
           file: ./abis/CryptoCoven.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+          receipt: true
       file: ./src/CryptoCoven/crypto-coven.ts
   - kind: ethereum
     name: CryptoKitties
@@ -39,8 +39,8 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Account
+        - KittyTransfer
         - Sale
-        - Transfer
       abis:
         - name: CryptoKitties
           file: ./abis/CryptoKitties.json
