@@ -1,5 +1,5 @@
 // Import the Account entity type from the generated schema
-import { Account, Sale } from "../generated/schema";
+import { Account, Sale } from "../../generated/schema";
 // Import required types from the Graph Protocol library
 import { BigDecimal, Bytes } from "@graphprotocol/graph-ts";
 import { BIGINT_ZERO } from "./constants";
@@ -73,7 +73,7 @@ export function getMarketplaceName(marketplace: Marketplace): string {
   }
 }
 
-export function getOrCreateSale(id: string): Sale {
+/**export function getOrCreateSale(id: string): Sale {
   let trade = Sale.load(id);
 
   if (!trade) {
@@ -92,4 +92,4 @@ export function getOrCreateSale(id: string): Sale {
     trade.save();
   }
   return trade as Sale;
-}
+}**/

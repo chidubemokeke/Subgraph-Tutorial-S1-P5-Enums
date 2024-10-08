@@ -1,9 +1,9 @@
 // Import the Transfer event from the CryptoCoven contract ABI
-import { Transfer as TransferEvent } from "../generated/CryptoCoven/CryptoCoven";
+import { Transfer as TransferEvent } from "../../generated/CryptoCoven/CryptoCoven";
 import { Address, log } from "@graphprotocol/graph-ts";
 
 // Import the Transfer entity from the generated schema, allowing us to create and update Transfer records in the store
-import { Transfer, Sale } from "../generated/schema";
+import { Transfer, Sale } from "../../generated/schema";
 import {
   ZERO_ADDRESS,
   OPENSEAV1,
