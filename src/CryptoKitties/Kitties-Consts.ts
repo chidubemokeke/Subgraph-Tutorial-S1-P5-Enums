@@ -1,4 +1,4 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts";
+/**import { BigInt, Address } from "@graphprotocol/graph-ts";
 
 // Define a constant representing the value zero as a BigInt object.
 export const BIGINT_ZERO = BigInt.fromI32(0);
@@ -33,4 +33,4 @@ export const OPENSEAV1: Address = Address.fromString(OPENSEAV1_ADDRESS);
 
 // Constant representing the address of the OpenSeaV2 contract.
 export const OPENSEAV2_ADDRESS = "0x7f268357A8c2552623316e2562D90e642bB538E5";
-export const OPENSEAV2: Address = Address.fromString(OPENSEAV2_ADDRESS);
+export const OPENSEAV2: Address = Address.fromString(OPENSEAV2_ADDRESS);**/

@@ -24,28 +24,5 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-          receipt: true
+          # receipt: true
       file: ./src/CryptoCoven/coven.ts
-  - kind: ethereum
-    name: CryptoKitties
-    network: mainnet
-    source:
-      address: "0x06012c8cf97BEaD5deAe237070F9587f8E7A266d"
-      abi: CryptoKitties
-      startBlock: 14605167
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Account
-        - KittyTransfer
-        - Sale
-      abis:
-        - name: CryptoKitties
-          file: ./abis/CryptoKitties.json
-      eventHandlers:
-        - event: Transfer(address,address,uint256)
-          handler: handleTransfer
-          receipt: true
-      file: ./src/CryptoKitties/kitties.ts

@@ -1,28 +1,21 @@
 // Import the Account entity type from the generated schema
-import { Account, Sale } from "../../generated/schema";
+import { Account } from "../../generated/schema";
 // Import required types from the Graph Protocol library
 import { Bytes } from "@graphprotocol/graph-ts";
 import { BIGINT_ZERO } from "../CryptoCoven/coven-consts";
 
 export enum Marketplace {
-  OPENSEAV1,
-  OPENSEAV2,
-  SEAPORT,
-  LOOKS_RARE,
+  OpenSeaV1,
+  OpenSeaV2,
+  SeaPort,
+  LooksRare,
   OxProtocol,
-  BLUR,
-  RARIBLE,
+  Blur,
+  Rarible,
   X2Y2,
-  Unknown,
-  CRYPTO_COVEN,
-}
-
-export enum NFT {
-  CRYPTO_COVEN,
-  CRYPTO_KITTIES,
+  CryptoCoven,
   Unknown,
 }
-
 // Function to get or create an Account entity based on an Ethereum address
 export function getOrCreateAccount(address: Bytes): Account {
   // Convert the provided Ethereum address to a hexadecimal string for use as the unique ID for the Account entity
@@ -40,9 +33,8 @@ export function getOrCreateAccount(address: Bytes): Account {
     account.totalSpent = BIGINT_ZERO; // Initialize the total spent amount to 0 (BigInt type)
     account.covenSendCount = BIGINT_ZERO; // Initialize the count of NFTs sent to 0
     account.covenReceiveCount = BIGINT_ZERO; // Initialize the count of NFTs received to 0
-    account.covenMintCount = BIGINT_ZERO;
-    account.kittyMintCount = BIGINT_ZERO;
-
+    account.covenMintCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
+    account.txHash = Bytes.empty();
     // Save the newly created account entity to the store to persist its state
     account.save();
   }
@@ -59,21 +51,23 @@ export function getOrCreateAccount(address: Bytes): Account {
  */
 export function getMarketplaceName(marketplace: Marketplace): string {
   // Using if-else statements to map the enum value to a string
-  if (marketplace === Marketplace.OPENSEAV1) {
+  if (marketplace === Marketplace.OpenSeaV1) {
     return "OpenSeaV1"; // If the marketplace is OpenSea, return its string representation
-  } else if (marketplace === Marketplace.OPENSEAV2) {
+  } else if (marketplace === Marketplace.OpenSeaV2) {
     return "OpenSeaV2";
-  } else if (marketplace === Marketplace.RARIBLE) {
-    return "Rarible"; // If the marketplace is Rarible, return its string representation
-  } else if (marketplace === Marketplace.SEAPORT) {
+  } else if (marketplace === Marketplace.SeaPort) {
     return "SeaPort"; // If the marketplace is SeaPort, return its string representation
-  } else if (marketplace === Marketplace.LOOKS_RARE) {
+  } else if (marketplace === Marketplace.LooksRare) {
     return "LooksRare"; // If the marketplace is LooksRare, return its string representation
   } else if (marketplace === Marketplace.OxProtocol) {
     return "OxProtocol"; // If the marketplace is OxProtocol, return its string representation
-  } else if (marketplace === Marketplace.BLUR) {
+  } else if (marketplace === Marketplace.Blur) {
     return "Blur"; // If the marketplace is Blur, return its string representation
+  } else if (marketplace === Marketplace.Rarible) {
+    return "Rarible"; // If the marketplace is Rarible, return its string representation
   } else if (marketplace === Marketplace.X2Y2) {
+    return "Blur"; // If the marketplace is Blur, return its string representation
+  } else if (marketplace === Marketplace.CryptoCoven) {
     return "X2Y2"; // If the marketplace is X2Y2, return its string representation
   } else {
     return "Unknown"; // If the marketplace doesn't match any known values, return "Unknown"

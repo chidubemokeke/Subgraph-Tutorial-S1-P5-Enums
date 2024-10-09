@@ -1,6 +1,6 @@
 "Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)."
 enum Marketplace {
-  OPENSEAV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
+  OpenSeaV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
   OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSeaV2 marketplace
   SeaPort # Represents when a CryptoCoven NFT is transferred from SeaPort marketplace
   LooksRare # Represents when a CryptoCoven NFT is transferred from LookRare marketplace
@@ -9,119 +9,56 @@ enum Marketplace {
   Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
   X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
   Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
-  CRYPTO_COVEN # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
+  CryptoCoven # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
 }
 
-"Enum types that indicate what NFT the Account holds/interacted with"
-enum NFT {
-  CRYPTO_COVEN # Represents a CryptoCoven NFT
-  CRYPTO_KITTIES # Represents a CryptoKitties NFT
-  Unknown
-}
-
-"Define an Account entity representing a user account"
+"Account entity representing a user account"
 type Account @entity {
   "Unique identifier for the account, typically the address"
   id: ID!
-  "The NFT contract where the transfer took place"
-  nft: NFT!
-  "Array of CryptoCoven transfers sent by the account"
+
+  #Array of CryptoCoven transfers sent by the account"
   sentCTransfers: [CovenTransfer!]! @derivedFrom(field: "fromC")
-  "Array of CryptoCoven transfers received by the account"
+  #Array of CryptoCoven transfers received by the account"
   receivedCTransfers: [CovenTransfer!]! @derivedFrom(field: "toC")
-  "Array of CryptoKitties transfers sent by the account"
-  sentKTransfers: [KittyTransfer!]! @derivedFrom(field: "fromK")
+
+  #rray of CryptoKitties transfers sent by the account
+  #sentKTransfers: [KittyTransfer!]! @derivedFrom(field: "fromK")
   "Array of CryptoKitties transfers received by the account"
-  receivedKTransfers: [KittyTransfer!]! @derivedFrom(field: "toK")
-  "Total value of tokens purchased by the account"
-  totalSpent: BigInt
-  "Number of transfer events sent by the account"
-  covenSendCount: BigInt
-  kittySendCount: BigInt
-  "Number of transfer events received by the account"
-  covenReceiveCount: BigInt
-  KittyReceiveCount: BigInt
-  "Number of tokens minted (if applicable)"
-  covenMintCount: BigInt
-  kittyMintCount: BigInt
-  "Index of the log within the transaction for tracking"
-  logIndex: BigInt!
+  #receivedKTransfers: [KittyTransfer!]! @derivedFrom(field: "toK")
+
+  #Total value of tokens purchased by the account
+  totalSpent: BigInt!
+  #Number of transfer events sent by the account"
+  covenSendCount: BigInt!
+  #kittySendCount: BigInt!
+  #Number of transfer events received by the account"
+  covenReceiveCount: BigInt!
+  #kittyReceiveCount: BigInt!
+
+  #Number of tokens minted (if applicable)"
+  covenMintCount: BigInt!
+  #kittyMintCount: BigInt!
+
   "Hash of the transaction"
   txHash: Bytes!
 }
 
 # Transfer entity representing the transfer of the CryptoCoven NFT"
 type CovenTransfer @entity {
-  "Unique identifier for the transfer event"
+  #Unique identifier for the transfer event"
   id: ID!
-  "Reference to the Account entity sending the NFT"
+  #Reference to the Account entity sending the NFT"
   fromC: Account!
-  "Reference to the Account entity receiving the NFT"
+  #Reference to the Account entity receiving the NFT"
   toC: Account!
-  "The unique token ID for the CryptoCoven NFT"
+  #The unique token ID for the CryptoCoven NFT"
   tokenId: BigInt!
-  "The marketplace the nft contract interacted with, likely a trade"
+  #The marketplace the nft contract interacted with, likely a trade"
   marketplace: Marketplace!
 
-  "Index of the log within the transaction for tracking"
+  #Index of the log within the transaction for tracking"
   logIndex: BigInt!
-  "Hash of the transaction"
-  txHash: Bytes!
-}
-
-# Transfer entity representing the transfer of the CryptoKitties NFT"
-type KittyTransfer @entity {
-  "Unique identifier for the transfer event"
-  id: ID!
-  "Reference to the Account entity sending the NFT"
-  fromK: Account!
-  "Reference to the Account entity receiving the NFT"
-  toK: Account!
-  "The unique token ID for the CryptoKitty NFT"
-  tokenId: BigInt!
-  "Index of the log within the transaction for tracking"
-  logIndex: BigInt!
-  "Hash of the transaction"
-  txHash: Bytes!
-}
-
-# Sale entity representing the Sale of the CryptoKitties NFT using TransactionReceipts to fetch addtional data from the logs"
-type Sale @entity {
-  "Unique identifier for the sale"
-  id: ID!
-
-  "Reference to the Account entity to aggregate transaction activity"
-  account: Account!
-
-  "TokenId associated with Sale"
-  referenceId: BigInt!
-
-  nftSold: String!
-
-  "Value associated with the sale"
-  value: BigInt
-
-  "Address of the buyer in the sale"
-  buyer: Bytes!
-
-  "Address of the seller in the sale"
-  seller: Bytes!
-
-  # Aggregated data fields for the transaction
-
-  "Total amount sold across all transactions"
-  totalSalesVolume: BigInt!
-  "Average price of NFTs sold"
-  averageSalePrice: BigDecimal!
-  "Total number of NFT sales"
-  totalSalesCount: BigInt!
-  "Highest sale price of an NFT"
-  highestSalePrice: BigInt!
-  "Lowest sale price of an NFT"
-  lowestSalePrice: BigInt!
-
-  "Index of the log within the transaction for tracking"
-  logIndex: BigInt!
-  "Hash of the transaction"
+  #Hash of the transaction"
   txHash: Bytes!
 }

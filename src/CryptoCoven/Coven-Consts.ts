@@ -37,7 +37,7 @@ export const LOOKS_RARE: Address = Address.fromString(LOOKS_RARE_ADDRESS);
 
 // Constant representing the address of the OXProtocol contract.
 export const OXPROTOCOL_ADDRESS = "0x44A6999Ec971cfCA458AFf25A808F272f6d492A2";
-export const OXProtocol: Address = Address.fromString(OXPROTOCOL_ADDRESS);
+export const OXPROTOCOL: Address = Address.fromString(OXPROTOCOL_ADDRESS);
 
 // Constant representing the address of the Blur contract.
 export const BLUR_ADDRESS = "0x0bC2f8668E86187Bd9e8fe832f72683871Cb5f21";

@@ -1,4 +1,4 @@
-// Import required types from the Graph Protocol library
+/*Import required types from the Graph Protocol library
 import { Bytes } from "@graphprotocol/graph-ts";
 import { BIGINT_ZERO, CRYPTO_COVEN } from "../CryptoKitties/kitties-consts";
 
@@ -14,7 +14,7 @@ export enum NFT {
  * @param NFT - The NFT enum value to convert.
  * @returns A string representing the name of the NFT.
  */
-export function getNFTName(nft: NFT): string {
+/*export function getNFTName(nft: NFT): string {
   // Using if-else statements to map the enum value to a string
   if (nft === NFT.CRYPTO_COVEN) {
     return "CryptoCoven"; // If the NFT is CryptoCoven, return its string representation
