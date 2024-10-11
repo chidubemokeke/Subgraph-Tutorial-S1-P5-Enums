@@ -66,10 +66,10 @@ type CovenTransfer @entity {
   value: BigInt!
 
   "The number of times an NFT has been burned"
-  #burnCount: BigInt!
+  # burnCount: BigInt! # Uncomment if needed in future logic
 
   "The number of times the NFT has been minted"
-  #mintCount: BigInt!
+  # mintCount: BigInt! # Uncomment if needed in future logic
 
   "Index of the log within the transaction for tracking"
   logIndex: BigInt!
