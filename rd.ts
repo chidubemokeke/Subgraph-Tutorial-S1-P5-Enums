@@ -1,4 +1,4 @@
-// Import the Transfer event from the CryptoCoven contract ABI
+/* Import the Transfer event from the CryptoCoven contract ABI
 import { Transfer as CovenTransferEvent } from "../../generated/CryptoCoven/CryptoCoven";
 import { Address, log } from "@graphprotocol/graph-ts";
 
@@ -144,8 +144,54 @@ export function handleTransfer(event: CovenTransferEvent): void {
   transfer.value = event.transaction.value;
   transfer.marketplace = getMarketplaceName(marketplace);
   transfer.save(); // Save the transfer entity to the store
+}*/
 
-  // Save updated account entities to the store
-  fromAccount.save(); // Save sender's account
-  toAccount.save(); // Save receiver's account
-}
+/**
+ * Optimized function to determine the marketplace based on the transaction's 'to' and 'from' addresses.
+ * It uses a mapping of known marketplace addresses to the appropriate marketplace enum values.
+ *
+ * A `Map` is a data structure that stores key-value pairs, allowing you to quickly retrieve a value (in this case,
+ * a marketplace) based on a key (an address).
+ *
+ * @param sender - The 'to' address in the transaction (possible marketplace)
+ * @param receiver - The 'from' address in the transaction
+ * @returns - A Marketplace enum value representing the detected marketplace
+ 
+export function mapMarketplace(
+  sender: Address | null,
+  receiver: Address | null
+): Marketplace {
+  // Create a `Map` object to store known marketplace addresses as keys and their corresponding marketplace enum as values.
+  // The `Map` allows us to efficiently check if an address belongs to a known marketplace and get the corresponding marketplace.
+  let marketplaceMapping = new Map<Address, Marketplace>();
+
+  // Populate the map with key-value pairs. The key is the marketplace's contract address (of type Address),
+  // and the value is the enum representing the marketplace.
+  marketplaceMapping.set(OPENSEAV1, Marketplace.OpenSeaV1); // OpenSea V1 marketplace
+  marketplaceMapping.set(OPENSEAV2, Marketplace.OpenSeaV2); // OpenSea V2 marketplace
+  marketplaceMapping.set(SEAPORT, Marketplace.SeaPort); // Seaport marketplace (a newer version of OpenSea)
+  marketplaceMapping.set(LOOKS_RARE, Marketplace.LooksRare); // LooksRare marketplace
+  marketplaceMapping.set(OXPROTOCOL, Marketplace.OxProtocol); // 0xProtocol marketplace
+  marketplaceMapping.set(OXPROTOCOLV2, Marketplace.OxProtocolV2); // 0xProtocol V2
+  marketplaceMapping.set(BLUR, Marketplace.Blur); // Blur marketplace
+  marketplaceMapping.set(RARIBLE, Marketplace.Rarible); // Rarible marketplace
+  marketplaceMapping.set(X2Y2, Marketplace.X2Y2); // X2Y2 marketplace
+  marketplaceMapping.set(NFTX, Marketplace.NFTX); // NFTX marketplace
+  marketplaceMapping.set(GENIE_SWAP, Marketplace.GenieSwap); // GenieSwap marketplace
+  marketplaceMapping.set(CRYPTO_COVEN, Marketplace.CryptoCoven); // CryptoCoven marketplace
+
+  // The `Map`'s `has()` method checks if a specific address exists in the map as a key.
+  // If the `sender` address is a known marketplace, return the corresponding enum value (the marketplace).
+  if (sender && marketplaceMapping.has(sender)) {
+    return marketplaceMapping.get(sender); // The '!' ensures that we assert that the result will not be null
+  }
+
+  // If the `sender` is not a known marketplace, we check the `receiver` address.
+  if (receiver && marketplaceMapping.has(receiver)) {
+    return marketplaceMapping.get(receiver); // Similar logic applies here for the receiver
+  }
+
+  // If neither the sender nor receiver matches a known marketplace, we return `Marketplace.Unknown`.
+  // This is the default case for transactions that occur outside of known marketplaces.
+  return Marketplace.Unknown;
+}**/

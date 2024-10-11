@@ -21,22 +21,13 @@ type Account @entity {
   id: ID!
 
   "Array of CryptoCoven transfers sent by the account"
-  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "fromCc")
+  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "from")
 
   "Array of CryptoCoven transfers received by the account"
-  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "toCc")
-
-  # "Array of CryptoKitty transfers sent by the account
-  #  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "fromCk")
-
-  #  "Array of CryptoKitty transfers received by the account
-  # receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "toCk")
+  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "to")
 
   "Total value of tokens purchased by the account for Covens"
-  totalSpentCc: BigInt!
-
-  "Total value of tokens purchased by the account for Kitties"
-  totalSpentCk: BigInt!
+  totalSpent: BigInt!
 
   "Number of coven transfer events sent by the account"
   covenSendCount: BigInt!
@@ -50,18 +41,6 @@ type Account @entity {
   "Number of coven tokens burned (if applicable)"
   covenBurnCount: BigInt!
 
-  "Number of transfer events sent by the account"
-  kittySendCount: BigInt!
-
-  "Number of transfer events received by the account"
-  kittyReceiveCount: BigInt!
-
-  "Number of tokens minted (if applicable)"
-  kittyMintCount: BigInt!
-
-  "Number of tokens burned (if applicable)"
-  kittyBurnCount: BigInt!
-
   "Hash of the transaction"
   txHash: Bytes!
 }
@@ -72,48 +51,15 @@ type CovenTransfer @entity {
   id: ID!
 
   "Reference to the Account entity sending the Coven NFT"
-  fromCc: Account!
-
-  "Reference to the Account entity receiving the Coven NFT"
-  toCc: Account!
-
-  "The unique token ID for the CryptoCoven NFT"
-  tokenId: BigInt!
-
-  "The marketplace the nft contract interacted with, likely a trade"
-  marketplace: Marketplace!
-
-  "The transaction value, if applicable"
-  value: BigInt!
-
-  # The number of times an NFT has been burned
-  # burnCount: BigInt! # Uncomment if needed in future logic
-
-  # The number of times the NFT has been minted
-  # mintCount: BigInt! # Uncomment if needed in future logic
-
-  "Index of the log within the transaction for tracking"
-  logIndex: BigInt!
-
-  "Hash of the transaction"
-  txHash: Bytes!
-}
-
-# Transfer entity representing the transfer of the CryptoCoven NFT
-type KittyTransfer @entity {
-  "Unique identifier for the transfer event"
-  id: ID!
-
-  "Reference to the Account entity sending the NFT"
   from: Account!
 
-  "Reference to the Account entity receiving the NFT"
+  "Reference to the Account entity receiving the Coven NFT"
   to: Account!
 
   "The unique token ID for the CryptoCoven NFT"
   tokenId: BigInt!
 
-  "The marketplace the nft contract interacted with, likely a trade"
+  "The marketplace the nft contract interacted with, likely a trade or mint"
   marketplace: Marketplace!
 
   "The transaction value, if applicable"
