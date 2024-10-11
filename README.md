@@ -1,12 +1,18 @@
-# Using Transaction Receipts and Enums for Your Subgraphs
+# Using Enums for Your Subgraphs
 
-This repository demonstrates the effectiveness of Transaction Receipts and enums by exploring two different NFT smart contracts, CryptoCoven and CryptoKitties. It will showcase how you can extract detailed information from transactions and marketplace interactions.
+This repository demonstrates the effectiveness of enums by exploring the CryptoCoven NFT smart contract. It showcases how you can extract detailed information from transactions and marketplace interactions, helping to manage data more effectively within your subgraph.
 
-## Using Enums
+## Objectives
 
-Enums play a critical role in categorizing and managing data in your subgraphs. By using enums, you can define a set of named values that can represent specific states or categories in your data model, enhancing the structure and clarity of your subgraph.
+- Understand the role of enums in categorizing NFT marketplaces.
+- Learn how to implement enums in your subgraph schema.
+- Explore examples of querying data using enums for enhanced clarity and maintainability.
 
 ## Why Use Enums?
+
+Enums play a critical role in categorizing and managing data in your subgraphs. They define a set of named values that represent specific states or categories, enhancing the structure and clarity of your subgraph.
+
+## Benefits of Enums
 
 - Clarity: Enums provide meaningful names for values, making the data easier to understand.
 - Validation: Enums enforce strict value definitions, preventing invalid data entries.
@@ -14,10 +20,10 @@ Enums play a critical role in categorizing and managing data in your subgraphs. 
 
 ## Defining Enums
 
-In this repository, we define enums for the various marketplaces where NFTs are traded, such as OpenSea and Rarible. Here’s how you can define enums in your subgraph schema:
+In this repository, we define enums for the various marketplaces where NFTs are traded. Here’s how you can define enums in your subgraph schema:
 
 ```gql
-# Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)
+# Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade/Mint)
 enum Marketplace {
   OpenSeaV1 # Represents when a CryptoCoven NFT is traded on the marketplace
   OpenSeaV2 # Represents when a CryptoCoven NFT is traded on the OpenSeaV2 marketplace
@@ -38,6 +44,10 @@ enum Marketplace {
 ## Utilizing Enums
 
 Once defined, enums can be used throughout your subgraph to categorize transactions or events. For example, when logging NFT sales, you can specify the marketplace involved in the trade using the enum.
+
+## Example Function
+
+Here's how you can implement a function to retrieve the marketplace name from the enum as a string:
 
 ```ts
 export function getMarketplaceName(marketplace: Marketplace): string {
@@ -71,3 +81,21 @@ export function getMarketplaceName(marketplace: Marketplace): string {
   }
 }
 ```
+
+## Best Practices for Using Enums
+
+- Consistent Naming: Use clear and descriptive names for enum values to enhance readability.
+- Centralized Management: Maintain enums in a single file for easier updates and management.
+- Documentation: Comment on enum definitions to provide context.
+
+## Frequently Asked Questions
+
+- What are enums? Enums are a special data type that allow you to define a set of named values. They are particularly useful for categorizing data.
+
+- Why should I use enums in my subgraph? Enums enhance clarity, validation, and maintainability of your data, making it easier to manage transactions.
+
+## Conclusion
+
+By implementing enums in your subgraph, you can improve data organization, clarity, and maintainability. This repository provides a foundational understanding of how to effectively use enums with the CryptoCoven contract.
+
+For further reading, check out [The Graph's official documentation.](https://thegraph.com/docs/en/developing/creating-a-subgraph/#enums)
