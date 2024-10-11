@@ -24,5 +24,4 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-          # receipt: true
       file: ./src/CryptoCoven/coven.ts

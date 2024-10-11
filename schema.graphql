@@ -1,64 +1,79 @@
-"Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)."
+# Enum for Marketplaces that the CryptoCoven contract interacted with(likely a Trade)
 enum Marketplace {
-  OpenSeaV1 # Represents when a CryptoCoven NFT is transferred from OpenSeaV1 marketplace
-  OpenSeaV2 # Represents when a CryptoCoven NFT is transferred from OpenSeaV2 marketplace
-  SeaPort # Represents when a CryptoCoven NFT is transferred from SeaPort marketplace
-  LooksRare # Represents when a CryptoCoven NFT is transferred from LookRare marketplace
-  OxProtocol # Represents when a CryptoCoven NFT is transferred from OxProtocol marketplace
-  Blur # Represents when a CryptoCoven NFT is transferred from Blur marketplace
-  Rarible # Represents when a CryptoCoven NFT is transferred from Rarible marketplace
-  X2Y2 # Represents when a CryptoCoven NFT is transferred from X2Y2 marketplace
+  OpenSeaV1 # Represents when a CryptoCoven NFT is traded on the marketplace
+  OpenSeaV2 # Represents when a CryptoCoven NFT is traded on the OpenSeaV2 marketplace
+  SeaPort # Represents when a CryptoCoven NFT is traded on the SeaPort marketplace
+  LooksRare # Represents when a CryptoCoven NFT is traded on the LookRare marketplace
+  OxProtocol # Represents when a CryptoCoven NFT is traded on the OxProtocol marketplace
+  OxProtocolV2 # Represents when a CryptoCoven NFT is traded on the OxProtocol marketplace
+  Blur # Represents when a CryptoCoven NFT is traded on the Blur marketplace
+  Rarible # Represents when a CryptoCoven NFT is traded on the Rarible marketplace
+  X2Y2 # Represents when a CryptoCoven NFT is traded on the X2Y2 marketplace
+  NFTX # Represents when a CryptoCoven NFT is traded on the NFTX marketplace
+  GenieSwap # Represents when a CryptoCoven NFT is traded on the NFTX marketplace
+  CryptoCoven # Represents when a CryptoCoven NFT is transferred from the crypto coven contract.
   Unknown # Represents when a CryptoCoven NFT is transferred from an unknown marketplace likely not a sale event
-  CryptoCoven # Represents when a CryptoCoven NFT is transferred from the crypto coven contract. Likey a mint
 }
 
-"Account entity representing a user account"
+# Account entity representing a user account
 type Account @entity {
   "Unique identifier for the account, typically the address"
   id: ID!
 
-  #Array of CryptoCoven transfers sent by the account"
-  sentCTransfers: [CovenTransfer!]! @derivedFrom(field: "fromC")
-  #Array of CryptoCoven transfers received by the account"
-  receivedCTransfers: [CovenTransfer!]! @derivedFrom(field: "toC")
+  "Array of CryptoCoven transfers sent by the account"
+  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "from")
 
-  #rray of CryptoKitties transfers sent by the account
-  #sentKTransfers: [KittyTransfer!]! @derivedFrom(field: "fromK")
-  "Array of CryptoKitties transfers received by the account"
-  #receivedKTransfers: [KittyTransfer!]! @derivedFrom(field: "toK")
+  "Array of CryptoCoven transfers received by the account"
+  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "to")
 
-  #Total value of tokens purchased by the account
+  "Total value of tokens purchased by the account"
   totalSpent: BigInt!
-  #Number of transfer events sent by the account"
-  covenSendCount: BigInt!
-  #kittySendCount: BigInt!
-  #Number of transfer events received by the account"
-  covenReceiveCount: BigInt!
-  #kittyReceiveCount: BigInt!
 
-  #Number of tokens minted (if applicable)"
+  "Number of transfer events sent by the account"
+  covenSendCount: BigInt!
+
+  "Number of transfer events received by the account"
+  covenReceiveCount: BigInt!
+
+  "Number of tokens minted (if applicable)"
   covenMintCount: BigInt!
-  #kittyMintCount: BigInt!
+
+  "Number of tokens burned (if applicable)"
+  covenBurnCount: BigInt!
 
   "Hash of the transaction"
   txHash: Bytes!
 }
 
-# Transfer entity representing the transfer of the CryptoCoven NFT"
+# Transfer entity representing the transfer of the CryptoCoven NFT
 type CovenTransfer @entity {
-  #Unique identifier for the transfer event"
+  "Unique identifier for the transfer event"
   id: ID!
-  #Reference to the Account entity sending the NFT"
-  fromC: Account!
-  #Reference to the Account entity receiving the NFT"
-  toC: Account!
-  #The unique token ID for the CryptoCoven NFT"
+
+  "Reference to the Account entity sending the NFT"
+  from: Account!
+
+  "Reference to the Account entity receiving the NFT"
+  to: Account!
+
+  "The unique token ID for the CryptoCoven NFT"
   tokenId: BigInt!
-  #The marketplace the nft contract interacted with, likely a trade"
+
+  "The marketplace the nft contract interacted with, likely a trade"
   marketplace: Marketplace!
 
-  #Index of the log within the transaction for tracking"
+  "The transaction value, if applicable"
+  value: BigInt!
+
+  "The number of times an NFT has been burned"
+  #burnCount: BigInt!
+
+  "The number of times the NFT has been minted"
+  #mintCount: BigInt!
+
+  "Index of the log within the transaction for tracking"
   logIndex: BigInt!
-  #Hash of the transaction"
+
+  "Hash of the transaction"
   txHash: Bytes!
 }

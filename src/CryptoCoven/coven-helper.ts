@@ -10,12 +10,16 @@ export enum Marketplace {
   SeaPort,
   LooksRare,
   OxProtocol,
+  OxProtocolV2,
   Blur,
   Rarible,
   X2Y2,
+  NFTX,
+  GenieSwap,
   CryptoCoven,
   Unknown,
 }
+
 // Function to get or create an Account entity based on an Ethereum address
 export function getOrCreateAccount(address: Bytes): Account {
   // Convert the provided Ethereum address to a hexadecimal string for use as the unique ID for the Account entity
@@ -34,11 +38,12 @@ export function getOrCreateAccount(address: Bytes): Account {
     account.covenSendCount = BIGINT_ZERO; // Initialize the count of NFTs sent to 0
     account.covenReceiveCount = BIGINT_ZERO; // Initialize the count of NFTs received to 0
     account.covenMintCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
+    account.covenBurnCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
     account.txHash = Bytes.empty();
+
     // Save the newly created account entity to the store to persist its state
     account.save();
   }
-
   // Return the account entity, which will be either the existing one or the newly created one
   return account as Account;
 }
@@ -61,14 +66,20 @@ export function getMarketplaceName(marketplace: Marketplace): string {
     return "LooksRare"; // If the marketplace is LooksRare, return its string representation
   } else if (marketplace === Marketplace.OxProtocol) {
     return "OxProtocol"; // If the marketplace is OxProtocol, return its string representation
+  } else if (marketplace === Marketplace.OxProtocolV2) {
+    return "OxProtocolV2"; // If the marketplace is OxProtocolV2, return its string representation
   } else if (marketplace === Marketplace.Blur) {
     return "Blur"; // If the marketplace is Blur, return its string representation
   } else if (marketplace === Marketplace.Rarible) {
     return "Rarible"; // If the marketplace is Rarible, return its string representation
   } else if (marketplace === Marketplace.X2Y2) {
-    return "Blur"; // If the marketplace is Blur, return its string representation
-  } else if (marketplace === Marketplace.CryptoCoven) {
     return "X2Y2"; // If the marketplace is X2Y2, return its string representation
+  } else if (marketplace === Marketplace.NFTX) {
+    return "NFTX"; // If the marketplace is NFTX, return its string representation
+  } else if (marketplace === Marketplace.GenieSwap) {
+    return "GenieSwap"; // If the marketplace is GenieSwap, return its string representation
+  } else if (marketplace === Marketplace.CryptoCoven) {
+    return "CryptoCoven"; // If the marketplace is CryptoCoven, return its string representation
   } else {
     return "Unknown"; // If the marketplace doesn't match any known values, return "Unknown"
   }
