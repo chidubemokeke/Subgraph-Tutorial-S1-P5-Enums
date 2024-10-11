@@ -19,7 +19,6 @@ import {
   NFTX,
   GENIE_SWAP,
   CRYPTO_COVEN,
-  BIGINT_ZERO,
 } from "./coven-consts";
 
 // Import helper functions that ensures accounts are created or retrieved
@@ -53,10 +52,12 @@ export function handleTransfer(event: CovenTransferEvent): void {
   }
 
   // **Update totalSpent for the receiver (toAccount)**
-  if (toAccount.totalSpent === null) {
-    toAccount.totalSpent = event.transaction.value; // Initialize if null
+  if (toAccount.totalSpentCc === null) {
+    toAccount.totalSpentCc = event.transaction.value; // Initialize if null
   } else {
-    toAccount.totalSpent = toAccount.totalSpent.plus(event.transaction.value); // Add value if not null
+    toAccount.totalSpentCc = toAccount.totalSpentCc.plus(
+      event.transaction.value
+    ); // Add value if not null
   }
 
   // **Handling minting events** (when 'from' is the zero address)
@@ -90,8 +91,8 @@ export function handleTransfer(event: CovenTransferEvent): void {
   // transfer.mintCount = toAccount.covenMintCount;
 
   // Set 'from' and 'to' accounts in the Transfer entity
-  transfer.from = fromAccount.id;
-  transfer.to = toAccount.id;
+  transfer.fromCc = fromAccount.id;
+  transfer.toCc = toAccount.id;
   transfer.tokenId = event.params.tokenId;
   transfer.logIndex = event.logIndex;
   transfer.txHash = event.transaction.hash;

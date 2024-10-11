@@ -34,7 +34,7 @@ export function getOrCreateAccount(address: Bytes): Account {
     account = new Account(accountId); // Use accountId as the unique identifier
 
     // Initialize fields for the new account entity
-    account.totalSpent = BIGINT_ZERO; // Initialize the total spent amount to 0 (BigInt type)
+    account.totalSpentCc = BIGINT_ZERO; // Initialize the total spent amount to 0 (BigInt type)
     account.covenSendCount = BIGINT_ZERO; // Initialize the count of NFTs sent to 0
     account.covenReceiveCount = BIGINT_ZERO; // Initialize the count of NFTs received to 0
     account.covenMintCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
