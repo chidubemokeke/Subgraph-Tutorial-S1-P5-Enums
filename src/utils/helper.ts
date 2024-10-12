@@ -35,10 +35,11 @@ export function getOrCreateAccount(address: Bytes): Account {
 
     // Initialize fields for the new account entity
     account.totalSpent = BIGINT_ZERO; // Initialize the total spent amount to 0 (BigInt type)
-    account.covenSendCount = BIGINT_ZERO; // Initialize the count of NFTs sent to 0
-    account.covenReceiveCount = BIGINT_ZERO; // Initialize the count of NFTs received to 0
-    account.covenMintCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
-    account.covenBurnCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
+    account.sendCount = BIGINT_ZERO; // Initialize the count of NFTs sent to 0
+    account.receiveCount = BIGINT_ZERO; // Initialize the count of NFTs received to 0
+    account.mintCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
+    account.burnCount = BIGINT_ZERO; // Initialize the count of NFTs minted to 0
+    account.uniqueMarketplacesCount = BIGINT_ZERO; // Initialize the count of market places interacted with
     account.txHash = Bytes.empty();
 
     // Save the newly created account entity to the store to persist its state

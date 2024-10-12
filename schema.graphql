@@ -21,25 +21,31 @@ type Account @entity {
   id: ID!
 
   "Array of CryptoCoven transfers sent by the account"
-  sentTransfers: [CovenTransfer!]! @derivedFrom(field: "from")
+  sent: [CovenTransfer!]! @derivedFrom(field: "from")
 
   "Array of CryptoCoven transfers received by the account"
-  receivedTransfers: [CovenTransfer!]! @derivedFrom(field: "to")
+  received: [CovenTransfer!]! @derivedFrom(field: "to")
 
   "Total value of tokens purchased by the account for Covens"
   totalSpent: BigInt!
 
   "Number of coven transfer events sent by the account"
-  covenSendCount: BigInt!
+  sendCount: BigInt!
 
   "Number of coven transfer events received by the account"
-  covenReceiveCount: BigInt!
+  receiveCount: BigInt!
 
   "Number of coven tokens minted (if applicable)"
-  covenMintCount: BigInt!
+  mintCount: BigInt!
 
   "Number of coven tokens burned (if applicable)"
-  covenBurnCount: BigInt!
+  burnCount: BigInt!
+
+  "Field to track thenumber of unique marketplaces interacted with"
+  uniqueMarketplacesCount: BigInt!
+
+  "Array of marketplace interactions for the account"
+  marketplaces: [MarketplaceInteraction!]! @derivedFrom(field: "account")
 
   "Hash of the transaction"
   txHash: Bytes!
@@ -76,4 +82,15 @@ type CovenTransfer @entity {
 
   "Hash of the transaction"
   txHash: Bytes!
+}
+
+# "Entity to track the number of unique marketplaces Accounts interacted with
+type MarketplaceInteraction @entity {
+  "This can be a combination of account ID and marketplace ID"
+  id: ID! # This can be a combination of account ID and marketplace ID
+  "Relationship to the Account"
+  account: Account!
+
+  "The name of the marketplace"
+  marketplace: String!
 }
