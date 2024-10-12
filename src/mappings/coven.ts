@@ -56,10 +56,11 @@ export function handleTransfer(event: CovenTransferEvent): void {
 
   /**
    * Update the covenReceiveCount for the 'to' account.
-   * Similar to the send count, it initializes to 1 if this is the first receive action.
+   * If this is the first transfer, initialize the count to 1.
+   * Otherwise, increment the existing count.
    */
-  toAccount.sendCount = toAccount.sendCount
-    ? toAccount.sendCount.plus(BIGINT_ONE)
+  toAccount.receiveCount = toAccount.receiveCount
+    ? toAccount.receiveCount.plus(BIGINT_ONE)
     : BIGINT_ONE;
 
   /**
@@ -87,8 +88,8 @@ export function handleTransfer(event: CovenTransferEvent): void {
    * When an NFT is burned, increment the covenBurnCount for the 'from' account.
    */
   if (event.params.to.equals(ZERO_ADDRESS)) {
-    fromAccount.mintCount = fromAccount.mintCount
-      ? fromAccount.mintCount.plus(BIGINT_ONE)
+    fromAccount.burnCount = fromAccount.burnCount
+      ? fromAccount.burnCount.plus(BIGINT_ONE)
       : BIGINT_ONE;
   }
 
@@ -159,45 +160,60 @@ export function handleTransfer(event: CovenTransferEvent): void {
 
   // **Track unique marketplace interactions for 'from' and 'to' accounts**
 
-  let fromMarketplaceInteractionId =
-    fromAccount.id + "-" + marketplace.toString(); // Unique ID for the marketplace interaction
+  // Ensure the sender and receiver are not the zero address
+  if (
+    !event.params.from.equals(ZERO_ADDRESS) &&
+    !event.params.to.equals(ZERO_ADDRESS)
+  ) {
+    // Handle marketplace interaction for the 'from' account
+    let fromMarketplaceInteractionId =
+      fromAccount.id + "-" + marketplace.toString(); // Unique ID for the marketplace interaction
 
-  // Load the interaction if it exists for the 'from' account
-  let fromInteraction = MarketplaceInteraction.load(
-    fromMarketplaceInteractionId
-  );
+    // Load the interaction if it exists for the 'from' account
+    let fromInteraction = MarketplaceInteraction.load(
+      fromMarketplaceInteractionId
+    );
 
-  if (fromInteraction == null) {
-    // If this is the first time interacting with this marketplace
-    fromInteraction = new MarketplaceInteraction(fromMarketplaceInteractionId); // Create new interaction entity
-    fromInteraction.account = fromAccount.id; // Set the associated account
-    fromInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
-    fromInteraction.save(); // Save the new interaction entity
+    if (fromInteraction == null) {
+      // If this is the first time interacting with this marketplace
+      fromInteraction = new MarketplaceInteraction(
+        fromMarketplaceInteractionId
+      ); // Create new interaction entity
+      fromInteraction.account = fromAccount.id; // Set the associated account
+      fromInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
+      fromInteraction.save(); // Save the new interaction entity
 
-    // Update the unique marketplace count for the 'from' account
-    fromAccount.uniqueMarketplacesCount =
-      fromAccount.uniqueMarketplacesCount.plus(BIGINT_ONE); // Increment the count
+      // Update the unique marketplace count for the 'from' account
+      fromAccount.uniqueMarketplacesCount =
+        fromAccount.uniqueMarketplacesCount.plus(BIGINT_ONE); // Increment the count
+    }
+
+    // Handle marketplace interaction for the 'to' account
+    let toMarketplaceInteractionId =
+      toAccount.id + "-" + marketplace.toString(); // Unique ID for the marketplace interaction
+
+    // Load the interaction if it exists for the 'to' account
+    let toInteraction = MarketplaceInteraction.load(toMarketplaceInteractionId);
+
+    if (toInteraction == null) {
+      // If this is the first time interacting with this marketplace
+      toInteraction = new MarketplaceInteraction(toMarketplaceInteractionId); // Create new interaction entity
+      toInteraction.account = toAccount.id; // Set the associated account
+      toInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
+      toInteraction.save(); // Save the new interaction entity
+
+      // Update the unique marketplace count for the 'to' account
+      toAccount.uniqueMarketplacesCount =
+        toAccount.uniqueMarketplacesCount.plus(BIGINT_ONE); // Increment the count
+    }
+
+    // Save the updated accounts with the unique marketplace count
+    fromAccount.save(); // Save the updated 'from' account
+    toAccount.save(); // Save the updated 'to' account
+  } else {
+    log.info(
+      "Skipping marketplace interaction tracking for zero address transfers: {}",
+      [event.transaction.hash.toHexString()]
+    );
   }
-
-  // Handle unique marketplace interaction for the 'to' account
-  let toMarketplaceInteractionId = toAccount.id + "-" + marketplace.toString(); // Unique ID for the marketplace interaction
-
-  // Load the interaction if it exists for the 'to' account
-  let toInteraction = MarketplaceInteraction.load(toMarketplaceInteractionId);
-
-  if (toInteraction == null) {
-    // If this is the first time interacting with this marketplace
-    toInteraction = new MarketplaceInteraction(toMarketplaceInteractionId); // Create new interaction entity
-    toInteraction.account = toAccount.id; // Set the associated account
-    toInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
-    toInteraction.save(); // Save the new interaction entity
-
-    // Update the unique marketplace count for the 'to' account
-    toAccount.uniqueMarketplacesCount =
-      toAccount.uniqueMarketplacesCount.plus(BIGINT_ONE); // Increment the count
-  }
-
-  // Save the updated accounts with the unique marketplace count
-  fromAccount.save(); // Save the updated 'from' account
-  toAccount.save(); // Save the updated 'to' account
 }
