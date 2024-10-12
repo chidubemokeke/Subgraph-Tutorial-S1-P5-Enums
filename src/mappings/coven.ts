@@ -171,7 +171,7 @@ export function handleTransfer(event: CovenTransferEvent): void {
     // If this is the first time interacting with this marketplace
     fromInteraction = new MarketplaceInteraction(fromMarketplaceInteractionId); // Create new interaction entity
     fromInteraction.account = fromAccount.id; // Set the associated account
-    fromInteraction.marketplace = marketplace.toString(); // Set the marketplace name
+    fromInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
     fromInteraction.save(); // Save the new interaction entity
 
     // Update the unique marketplace count for the 'from' account
@@ -189,7 +189,7 @@ export function handleTransfer(event: CovenTransferEvent): void {
     // If this is the first time interacting with this marketplace
     toInteraction = new MarketplaceInteraction(toMarketplaceInteractionId); // Create new interaction entity
     toInteraction.account = toAccount.id; // Set the associated account
-    toInteraction.marketplace = marketplace.toString(); // Set the marketplace name
+    toInteraction.marketplace = getMarketplaceName(marketplace); // Set the marketplace name
     toInteraction.save(); // Save the new interaction entity
 
     // Update the unique marketplace count for the 'to' account
