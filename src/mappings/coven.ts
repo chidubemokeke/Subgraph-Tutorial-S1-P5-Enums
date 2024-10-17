@@ -109,6 +109,11 @@ export function handleTransfer(event: CovenTransferEvent): void {
   transfer.txHash = event.transaction.hash; // Transaction hash for reference
 
   // **Determine the Marketplace**
+
+  /**Please note that this method is a simplifaction and only works for EOAs (User Wallet Addresses) directly interacting with the marketplace contracts.
+   If a smart account or another contract interacts in this instance, the marketplace not be visible here. 
+   To catch those edge cases, use transaction receipts and logs.**/
+
   let sender: Address | null = event.transaction.to; // Transaction 'to' address (potential marketplace contract address)
   let receiver: Address | null = event.transaction.from; // Transaction 'from' address (if the sender doesn't match)
   let marketplace: Marketplace = Marketplace.Unknown; // Default to unknown marketplace to log txHash for debugging.
